@@ -1,0 +1,119 @@
+# lf 
+
+# Basic settings
+
+set autoquit true
+set shell sh
+set shellopts '-eu'
+set ifs "\n"
+set scrolloff 10
+set ignorecase true
+set mouse true
+set ratios '1:2'
+
+
+# cmd/funcions
+
+cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
+
+#cmd setbg "$1"
+
+cmd bulkrename $vidir
+
+cmd open &{{
+    case $(file --mime-type -Lb $f) in
+        text/*) lf -remote "send $id \$$EDITOR \$fx";;
+        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+
+cmd extract ${{
+    clear; tput cup $(($(tput lines)/3)); tput bold
+    set -f
+    printf "%s\n\t" "$fx"
+    printf "extract?[y/N]"
+    read ans
+    [ $ans = "y" ] && aunpack $fx
+}}
+
+cmd delete ${{
+    clear; tput cup $(($(tput lines)/3)); tput bold
+    set -f
+    printf "%s\n\t" "$fx"
+    printf "delete?[y/N]"
+    read ans
+    [ $ans = "y" ] && rm -rf -- $fx
+}}
+
+# Bindings
+
+map <enter> shell
+
+map ` !true
+
+map b $setbg $f
+
+# execute current file (must be executable)
+map x $$f
+map X !$f
+
+map o &mimeopen $f
+map O $mimeopen --ask $f
+
+
+map gg top
+map <home> top
+map GG bottom
+map <end> bottom
+map H high
+map M middle
+map L low
+
+map v invert
+map u unselect
+map c clear
+
+map DD delete
+map p paste
+map y copy
+map x cut
+
+map E extract
+#map C copyto
+#map M moveto
+
+# Tash
+
+#map dd trash
+#map dr restore-trash
+
+# make sure trash folder exists
+# %mkdir -p ~/.trash
+
+# move current file or selected files to trash folder
+# (also see 'man mv' for backup/overwrite options)
+cmd trash %set -f; mv $fx ~/.trash
+
+map <c-m> mkdir
+
+# Rename
+
+map A rename # at the very end
+map c push A<c-u> # new rename
+map I push A<c-a> # at the very beginning
+map i push A<a-b><a-b><a-f> # before extension
+map a push A<a-b> # after extension
+map B bulkrename
+
+
+# Shortcuts
+
+map gd cd ~/Documents
+map gD cd ~/Downloads
+map gp cd ~/Pictures
+map gc cd ~/.config
+map gM cd /mnt
+map gs cd ~/.local/bin
+map gH cd ~
+
+

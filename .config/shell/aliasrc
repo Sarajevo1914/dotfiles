@@ -1,0 +1,42 @@
+#!/bin/sh
+
+#
+# ~/.config/shell/aliasrc
+#
+
+# Based on luke smith
+
+### Alias
+
+# Verbosity and settings that you pretty much just always are going to want
+alias \
+	cp="cp -iv"	\
+	..="cd .."	\
+	mv="mv -iv" \
+	rm="rm -vI" \
+	bc="bc -ql" \
+	ls="lsd --group-dirs first"	\
+	lsa="lsd -A --group-dirs first"
+	lss="lsd -lAh --group-dirs first"	\
+	ll="lsd -lA --group-dirs first --total-size"	\
+	llt="lsd -lAt --group-dirs first --total-size"	\
+	lls="lsd -lAS --group-dirs first --total-size"	\
+	rsync="rsync -vrPlu" \
+	mkd="mkdir -pv" \
+	yt="yt-dlp --embed-metadata -i" \
+	yta="yt -x -f bestaudio/best" \
+	ytt="yt --skip-download --write-thumbnail" \
+	ffmpeg="ffmpeg -hide_banner"
+
+
+# These common commands are just too long! Abbreviate them
+alias \
+	ns="nsxiv-rifle"
+
+
+# Colorize commands when possible
+alias \
+	grep="grep --color=auto"	\
+	diff="diff --color=auto"	\
+	ccat="highlight --out-format=ansi"	\
+	ip="ip -color=auto"	\

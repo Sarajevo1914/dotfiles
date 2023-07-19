@@ -7,7 +7,7 @@ application/vnd.comicbook+zip=org.pwmt.zathura-cb.desktop;
 application/vnd.adobe.flash.movie=mpv.desktop;vlc.desktop;
 video/x-matroska=vlc.desktop;
 application/x-desktop=gvim.desktop;
-text/plain=gvim.desktop;sublime_text.desktop;
+text/plain=sublime_text.desktop;gvim.desktop;wine-extension-ini.desktop;
 application/vnd.rar=xarchiver.desktop;engrampa.desktop;
 audio/x-opus+ogg=vlc.desktop;mpv.desktop;
 audio/aac=mediainfo-gui.desktop;vlc.desktop;
@@ -18,6 +18,12 @@ video/quicktime=mpv.desktop;
 image/png=mediainfo-gui.desktop;org.gnome.eog.desktop;
 image/jpeg=mediainfo-gui.desktop;
 image/webp=mediainfo-gui.desktop;
+text/x-tex=sublime_text.desktop;
+application/x-shellscript=sublime_text.desktop;
+application/json=sublime_text.desktop;
+text/markdown=gvim.desktop;sublime_text.desktop;
+text/x-opml+xml=sublime_text.desktop;
+application/x-zerosize=sublime_text.desktop;
 
 [Default Applications]
 text/plain=vim.desktop;gvim.desktop
@@ -44,3 +50,4 @@ video/mp4=mpv.desktop
 audio/x-opus+ogg=mpv.desktop
 application/vnd.sqlite3=vim.desktop
 video/quicktime=mpv.desktop
+application/x-zerosize=sublime_text.desktop

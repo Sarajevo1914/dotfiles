@@ -1,4 +1,7 @@
-# lf 
+#
+# lfrc
+#
+
 
 # Basic settings
 
@@ -45,6 +48,15 @@ cmd delete ${{
     [ $ans = "y" ] && rm -rf -- $fx
 }}
 
+#cmd trash ${{
+#    clear; tput cup $(($(tput lines)/3)); tput bold
+#    set -f
+#    printf "%s\n\t" "$fx"
+#    printf "sent to trash?[y/N]"
+#    read ans
+#    [ $ans = "y" ] && trash-put -- $fx
+#}}
+
 # Bindings
 
 map <enter> shell
@@ -60,41 +72,37 @@ map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
 
+map <c-m> mkdir
 
 map gg top
 map <home> top
+map K top
 map GG bottom
+map J bottom
 map <end> bottom
-map H high
-map M middle
-map L low
+
+# map H high
+# map M middle
+# map L low
 
 map v invert
 map u unselect
-map c clear
+map C clear
 
 map DD delete
 map p paste
 map y copy
 map x cut
 
+# map Dd trash
+# map dr restore-trash
+
 map E extract
-#map C copyto
-#map M moveto
+# map C copyto
+# map M moveto
 
-# Tash
 
-#map dd trash
-#map dr restore-trash
 
-# make sure trash folder exists
-# %mkdir -p ~/.trash
-
-# move current file or selected files to trash folder
-# (also see 'man mv' for backup/overwrite options)
-cmd trash %set -f; mv $fx ~/.trash
-
-map <c-m> mkdir
 
 # Rename
 
@@ -115,5 +123,5 @@ map gc cd ~/.config
 map gM cd /mnt
 map gs cd ~/.local/bin
 map gH cd ~
-
+map gT cd ~/.local/share/Trash/files
 

@@ -2,6 +2,7 @@
 #importante para moverse
 #
 
+
 # terminal emulator
 super + Return
 	kitty
@@ -33,6 +34,7 @@ super + alt + {q,r}
 super + shift + p
 	pkill -USR1 -x polybar
 
+
 #
 # Multimedia Controls
 #
@@ -52,14 +54,14 @@ XF86AudioNext
 XF86AudioPrev
 
 XF86MonBrightnessUp
-	xbacklight +5
+	xbacklight +2
 
 
 XF86MonBrightnessDown
-	xbacklight -5
+	xbacklight -2
+
 
 #
-
 # launchers
 #
  
@@ -118,6 +120,7 @@ super + {grave,Tab}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
+
 #
 # preselect
 #
@@ -137,6 +140,7 @@ super + ctrl + space
 # cancel the preselection for the focused desktop
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
 
 #
 # move/resize
@@ -158,6 +162,7 @@ super + {Left,Down,Up,Right}
 super + m
 	bspc desktop -l next
 
+
 #
 # state/flags
 #
@@ -169,6 +174,7 @@ super + {t,shift + t,s,f}
 # set the node flags
 super + ctrl + {m,x,y,z}
         bspc node -g {marked,locked,sticky,private}
+
 
 #
 # focus/swap

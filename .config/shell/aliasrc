@@ -16,7 +16,7 @@ alias \
 	rm="rm -vI" \
 	bc="bc -ql" \
 	ls="lsd --group-dirs first"	\
-	lsa="lsd -A --group-dirs first"
+	lsa="lsd -A --group-dirs first"	\
 	lss="lsd -lAh --group-dirs first"	\
 	ll="lsd -lA --group-dirs first --total-size"	\
 	llt="lsd -lAt --group-dirs first --total-size"	\
@@ -26,12 +26,12 @@ alias \
 	yt="yt-dlp --embed-metadata -i" \
 	yta="yt -x -f bestaudio/best" \
 	ytt="yt --skip-download --write-thumbnail" \
-	ffmpeg="ffmpeg -hide_banner"
+	ffmpeg="ffmpeg -hide_banner"	\
 
 
 # These common commands are just too long! Abbreviate them
 alias \
-	ns="nsxiv-rifle"
+	ns="nsxiv-rifle"	\
 
 
 # Colorize commands when possible

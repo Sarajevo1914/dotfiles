@@ -1,22 +1,15 @@
-#
-#importante para moverse
-#
+# ~/.config/sxhkd/sxhkdrc
+# BSPWM SXHKD config
 
+# ModKey = super is winkey
 
-# terminal emulator
+# TERMINAL
 super + Return
 	kitty
 
-# program launcher
+# LAUNCHER
 super + @space
 	dmenu_run
-
-#super + d
-#	rofi -show run
-	
-# focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
 
 # close and kill
 super + {_,shift + }q
@@ -29,15 +22,13 @@ super + Escape
 # quit/restart bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r}
-	
+
 # quit/restart polybar
 super + shift + p
 	pkill -USR1 -x polybar
 
 
-#
-# Multimedia Controls
-#
+# XF86
 
 XF86AudioLowerVolume
 	amixer set Master 5%-
@@ -45,30 +36,23 @@ XF86AudioLowerVolume
 XF86AudioRaiseVolume
 	amixer set Master 5%+
 
-XF86AudioMute 
+XF86AudioMute
 	amixer set Master toggle
-
-XF86AudioNext
-
-
-XF86AudioPrev
 
 XF86MonBrightnessUp
 	xbacklight +2
-
 
 XF86MonBrightnessDown
 	xbacklight -2
 
 
-#
-# launchers
-#
- 
-# firefox
+
+# LAUNCHERS
+
+# BROWSER
 super + w
-	firefox
- 
+	mercury-browser
+
 # File Manager GUI
 super + e
 	pcmanfm
@@ -77,28 +61,25 @@ super + e
 super + g
 	gammy
 
+# LOCKSCREEN
+super + shift + x
+	betterlockscreen -l dimblur
 
-#
-# bspwm
-#
+super + alt + x
+	betterlockscreen -s dimblur
 
-# alternate between the tiled and monocle layout
-super + m
-	bspc desktop -l next
 
-# set the window state
-super + {t,shift + t,s,f}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+# BSPWM
 
-# set the node flags
-super + ctrl + {m,x,y,z}
-	bspc node -g {marked,locked,sticky,private}
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
 
-# focus the node for the given path jump
-super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
+# focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
 
-# focus the next/previous window in the current desktop
+ focus the next/previous window in the current desktop
 super + {_,shift + }c
 	bspc node -f {next,prev}.local.!hidden.window
 
@@ -110,15 +91,34 @@ super + bracket{left,right}
 super + {grave,Tab}
 	bspc {node,desktop} -f last
 
+
+# WINDOWS RULES / LAYOUTS
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
+
+# set the window state
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+
+# IDK
+
+# set the node flags
+#super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+# focus the node for the given path jump
+#super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+
 # focus the older or newer node in the focus history
 #super + {o,i}
-#	bspc wm -h off; \
-#	bspc node {older,newer} -f; \
-#	bspc wm -h on
-
-# focus or send to the given desktop
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
 
 
 #
@@ -182,5 +182,3 @@ super + ctrl + {m,x,y,z}
 
 # focus the node for the given path jump
 super + {p,b,comma,period}
-
-

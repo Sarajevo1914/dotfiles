@@ -1,14 +1,19 @@
-#
-# wm independent hotkeys
-#
+# ~/.config/berry/sxhkdrc
+# BERRYWM SXHKD config
 
-# terminal emulator
+# ModKey = super is winkey
+
+# TERMINAL
 super + Return
 	kitty
 
-# program launcher
+# LAUNCHER
 super + @space
 	dmenu_run
+
+# Close
+super + q
+    berryc window_close
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -17,6 +22,8 @@ super + Escape
 #
 # berry hotkeys
 #
+
+############# MOVE WIN, REZISE
 
 super + {h, j, k, l}
     berryc window_move {-50 0, 0 50, 0 -50, 50 0}
@@ -48,11 +55,44 @@ super + n
 super + Tab
     berryc cycle_focus
 
-super + q
-    berryc window_close
+
 
 super + c
     berryc window_center
 
 ~button1
     berryc pointer_focus
+
+
+# LOCKSCREEN
+super + shift + x
+    betterlockscreen -l dimblur
+
+super + alt + x
+    betterlockscreen -s dimblur
+
+
+#
+# XF86
+#
+
+XF86AudioLowerVolume
+    amixer set Master 5%-
+
+XF86AudioRaiseVolume
+    amixer set Master 5%+
+
+XF86AudioMute
+    amixer set Master toggle
+
+XF86AudioNext
+
+
+XF86AudioPrev
+
+XF86MonBrightnessUp
+    xbacklight +2
+
+
+XF86MonBrightnessDown
+    xbacklight -2

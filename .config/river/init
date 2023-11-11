@@ -1,0 +1,262 @@
+#!/bin/sh
+
+# WM BASIC
+
+TOUCHPAD="pointer-2-7-SynPS/2_Synaptics_TouchPad"
+
+riverctl input "$TOUCHPAD" tap enabled
+
+riverctl focus-follows-cursor always
+
+
+# Set background and border color
+riverctl background-color 0x002b36
+riverctl border-color-focused 0x93a1a1
+riverctl border-color-unfocused 0x586e75
+
+# Set keyboard repeat rate
+riverctl set-repeat 50 300
+
+# Make certain views start floating
+riverctl float-filter-add app-id float
+riverctl float-filter-add title "popup title with spaces"
+
+# Set app-ids and titles of views which should use client side decorations
+riverctl csd-filter-add app-id "gedit"
+
+# Set the default layout generator to be rivertile and start it.
+# River will send the process group of the init executable SIGTERM on exit.
+riverctl default-layout rivertile
+rivertile -view-padding 6 -outer-padding 6 &
+
+# Declare a passthrough mode. This mode has only a single mapping to return to
+# normal mode. This makes it useful for testing a nested wayland compositor
+#riverctl declare-mode passthrough
+
+
+### WHAT IS THIS ?>?????
+# Super+F11 to enter passthrough mode
+#riverctl map normal Super F11 enter-mode passthrough
+
+# Super+F11 to return to normal mode
+#riverctl map passthrough Super F11 enter-mode normal
+
+
+
+
+# KEYS
+
+
+# # BASICS
+
+# ModKey = super is winkey
+
+# TERMINAL
+riverctl map normal Super Return spawn kitty
+
+# LAUNCEHR check this
+riverctl map normal Super Space spawn 'wofi --show run'
+
+# CLOSE FOCUS WINDOWS
+riverctl map normal Super Q close
+
+# # CHECK HOW TO CLOSE AND KILL
+
+# RESTART ?? THIS SEEM NOT WORK
+riverctl map normal Super R spawn '/bin/sh -c ~/.config/river/init'
+
+# EXIT RIVER
+riverctl map normal Super+Shift Q exit
+
+
+# # WINDOWS KEY
+
+# Change win focus to the next/previous view in the layout stack
+riverctl map normal Super J focus-view next
+riverctl map normal Super K focus-view previous
+
+# Swap the focused view with the next/previous
+# view in the layout stack
+riverctl map normal Super+Shift J swap next
+riverctl map normal Super+Shift K swap previous
+
+# Decrease/increase the main ratio of rivertile(1)
+riverctl map normal Super H send-layout-cmd rivertile "main-ratio -0.05"
+riverctl map normal Super L send-layout-cmd rivertile "main-ratio +0.05"
+
+# Increment/decrement the main count of rivertile(1) /// ?? switch vertical to horizontal mode ???
+riverctl map normal Super+Shift H send-layout-cmd rivertile "main-count +1"
+riverctl map normal Super+Shift L send-layout-cmd rivertile "main-count -1"
+
+# Super+{Up,Right,Down,Left} to change layout orientation
+riverctl map normal Super Up    send-layout-cmd rivertile "main-location top"
+riverctl map normal Super Right send-layout-cmd rivertile "main-location right"
+riverctl map normal Super Down  send-layout-cmd rivertile "main-location bottom"
+riverctl map normal Super Left  send-layout-cmd rivertile "main-location left"
+
+
+
+
+# # WM WINDOWS MOVEMENT
+
+# # THIS SEEM TO HAVE 1 2 3 4 5 6 7 8 9
+# # # make this also work with 0 or use 0 to change default layout
+
+for i in $(seq 1 9)
+do
+    tags=$((1 << ($i - 1)))
+
+    # Super+[1-9] to focus tag [0-8]
+    riverctl map normal Super $i set-focused-tags $tags
+
+    # Super+Shift+[1-9] to tag focused view with tag [0-8]
+    riverctl map normal Super+Shift $i set-view-tags $tags
+
+    # Super+Ctrl+[1-9] to toggle focus of tag [0-8]
+    #riverctl map normal Super+Control $i toggle-focused-tags $tags
+
+    # Super+Shift+Ctrl+[1-9] to toggle tag [0-8] of focused view
+    #riverctl map normal Super+Shift+Control $i toggle-view-tags $tags
+done
+
+# Super+0 to focus all tags
+# Super+Shift+0 to tag focused view with all tags
+all_tags=$(((1 << 32) - 1))
+riverctl map normal Super 0 set-focused-tags $all_tags
+riverctl map normal Super+Shift 0 set-view-tags $all_tags
+
+
+# # # # switch desktop / tag between the current and the last used
+#riverctl map normal Super Tab
+
+
+# # # # change focus to the next win / node that is place in the same dekstop / tag
+#riverctl map normal Super C
+
+
+# # # # change focus to the next and prev desktop / tag
+#mouse wheel up and down
+#riverctl map normal + [ , ]
+
+
+# # # # send active win / node to the next and prev desktop / tag
+#riverctl map normal Super + shift + [ , ]
+
+
+
+# # WM LAYOUTS
+
+# Toggle fullscreen
+riverctl map normal Super F toggle-fullscreen
+
+# # # # Monocle layout
+#check how rivercarro works sourcehut
+#riverctl map normal Super M send-layout-cmd rivercarro "main-location monocle"
+
+# # # FLOATING THINKS
+
+# Toggle float
+riverctl map normal Super S toggle-float
+
+# Move win in floating mode
+riverctl map normal Super+Alt H move left 100
+riverctl map normal Super+Alt J move down 100
+riverctl map normal Super+Alt K move up 100
+riverctl map normal Super+Alt L move right 100
+
+# Snap win to screen edges in floating mode
+riverctl map normal Super+Alt+Control H snap left
+riverctl map normal Super+Alt+Control J snap down
+riverctl map normal Super+Alt+Control K snap up
+riverctl map normal Super+Alt+Control L snap right
+
+# Resize win in flaoting mode
+riverctl map normal Super+Alt+Shift H resize horizontal -100
+riverctl map normal Super+Alt+Shift J resize vertical 100
+riverctl map normal Super+Alt+Shift K resize vertical -100
+riverctl map normal Super+Alt+Shift L resize horizontal 100
+
+# Super + Left Mouse Button to move views
+riverctl map-pointer normal Super BTN_LEFT move-view
+
+# Super + Right Mouse Button to resize views
+riverctl map-pointer normal Super BTN_RIGHT resize-view
+
+# Super + Middle Mouse Button to toggle float
+riverctl map-pointer normal Super BTN_MIDDLE toggle-float
+
+
+
+# # LAUNCHERS
+
+# Browser
+riverctl map normal Super W spawn mercury-browser
+
+# File Manager GUI
+riverctl map normal Super E spawm pcmanfm
+
+# Gammy
+riverctl map normal Super G spawm gammy
+
+# LOCK
+riverctl map normal Super+Shift X waylock
+
+
+#riverctl map normal Super+Shift X 'swaylock -f \
+    --screenshots \
+    --clock \
+    --indicator \
+    --indicator-radius 100 \
+    --indicator-thickness 7 \
+    --effect-blur 7x5 \
+    --effect-vignette 0.5:0.5 \
+    --ring-color bb00cc \
+    --key-hl-color 880033 \
+    --line-color 00000000 \
+    --inside-color 00000088 \
+    --separator-color 00000000 \
+    --grace 2 \
+    --fade-in 0.2'
+
+
+
+# # XF86
+
+# Various media key mapping examples for both normal and locked mode which do
+# not have a modifier
+for mode in normal locked
+do
+    # Eject the optical drive (well if you still have one that is)
+    riverctl map $mode None XF86Eject spawn 'eject -T'
+
+    # Control pulse audio volume with pamixer (https://github.com/cdemoulins/pamixer)
+    riverctl map $mode None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
+    riverctl map $mode None XF86AudioLowerVolume  spawn 'pamixer -d 5'
+    riverctl map $mode None XF86AudioMute         spawn 'pamixer --toggle-mute'
+
+    # Control MPRIS aware media players with playerctl (https://github.com/altdesktop/playerctl)
+    riverctl map $mode None XF86AudioMedia spawn 'playerctl play-pause'
+    riverctl map $mode None XF86AudioPlay  spawn 'playerctl play-pause'
+    riverctl map $mode None XF86AudioPrev  spawn 'playerctl previous'
+    riverctl map $mode None XF86AudioNext  spawn 'playerctl next'
+
+    # Control screen backlight brightness with light (https://github.com/haikarainen/light)
+    riverctl map $mode None XF86MonBrightnessUp   spawn 'light -A 5'
+    riverctl map $mode None XF86MonBrightnessDown spawn 'light -U 5'
+done
+
+
+
+# # IDK
+
+
+# Super+Period and Super+Comma to focus the next/previous output
+riverctl map normal Super Period focus-output next
+riverctl map normal Super Comma focus-output previous
+
+# Super+Shift+{Period,Comma} to send the focused view to the next/previous output
+riverctl map normal Super+Shift Period send-to-output next
+riverctl map normal Super+Shift Comma send-to-output previous
+
+# Super+Return to bump the focused view to the top of the layout stack
+#riverctl map normal Super Return zoom

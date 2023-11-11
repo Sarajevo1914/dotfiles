@@ -27,6 +27,8 @@ set go=a
 set mouse=a
 set nohlsearch
 set clipboard+=unnamedplus
+set clipboard=unnamedplus
+set clipboard=unnamed
 set noshowmode
 set noruler
 set laststatus=0

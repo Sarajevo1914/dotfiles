@@ -1,7 +1,7 @@
 #!/bin/bash
 
-pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/berry/sxhkd &
-nitrogen --restore &
+pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/berry/sxhkdrc &
+nitrogen --restore
 $HOME/.config/polybar/launch.sh &
 
 # Set decoration geometry
@@ -24,4 +24,3 @@ berryc draw_text   "true"
 berryc edge_lock   "true"
 berryc set_font    "Ubuntu Bold 12"
 berryc json_status "true"
-

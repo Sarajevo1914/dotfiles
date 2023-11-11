@@ -33,16 +33,16 @@ export MANPAGER="less"
 [[ $- != *i* ]] && return
 
 # disable ctrl-s and ctrl-q.
-stty -ixon 
+stty -ixon
 
 # allow you to cd into directory merely by tiping the directory name
-shopt -s autocd 
+shopt -s autocd
 
 # autocorrects cd misspellings
-shopt -s cdspell 
+shopt -s cdspell
 
 # expand aliases
-shopt -s expand_aliases 
+shopt -s expand_aliases
 
 # ignore upper and lowercase when TAB completion
 bind "set completion-ignore-case on"
@@ -56,4 +56,6 @@ HISTSIZE=10000000
 SAVEHIST=10000000
 
 
-
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    export MOZ_ENABLE_WAYLAND=1
+fi

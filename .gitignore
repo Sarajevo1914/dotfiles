@@ -1,0 +1,9 @@
+.cache/*
+.cargo/*
+.local/share/Trash/*
+.wine/*
+.yarn/*
+Documents/*
+Pictures/*
+Downloads/*
+Desktop/*

@@ -13,7 +13,7 @@ set scrolloff 10
 set ignorecase true
 set mouse true
 set ratios '1:2'
-
+set sixel true
 
 # cmd/funcions
 
@@ -124,4 +124,3 @@ map gM cd /mnt
 map gs cd ~/.local/bin
 map gH cd ~
 map gT cd ~/.local/share/Trash/files
-

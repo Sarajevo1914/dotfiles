@@ -51,7 +51,7 @@ XF86MonBrightnessDown
 
 # BROWSER
 super + w
-	mercury-browser
+	firefox
 
 # File Manager GUI
 super + e

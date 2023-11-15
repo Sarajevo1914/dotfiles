@@ -53,6 +53,10 @@ fi
 # Adds `~/.local/bin` to $PATH
 export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
 
+
+export TERMINAL="kitty"
+export BROWSER="firefox"
+
 ### SET MANPAGER
 
 ### "bat" as manpager

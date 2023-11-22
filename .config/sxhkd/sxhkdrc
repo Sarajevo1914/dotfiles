@@ -31,13 +31,16 @@ super + shift + p
 # XF86
 
 XF86AudioLowerVolume
-	amixer set Master 5%-
+#	amixer set Master 5%-
+	pamixer -d 5
 
 XF86AudioRaiseVolume
-	amixer set Master 5%+
+#	amixer set Master 5%+
+	pamixer -i 5
 
 XF86AudioMute
-	amixer set Master toggle
+#	amixer set Master toggle
+	pamixer -t
 
 XF86MonBrightnessUp
 	xbacklight +2

@@ -29,18 +29,26 @@ super + shift + p
 
 
 # XF86
-
+# check pactl how works and how to set volume using %
 XF86AudioLowerVolume
 #	amixer set Master 5%-
+#	pactl set-sink-volume @DEFAULT_SINK@ -1000
 	pamixer -d 5
 
 XF86AudioRaiseVolume
 #	amixer set Master 5%+
+#	pactl set-sink-volume @DEFAULT_SINK@ +1000
 	pamixer -i 5
 
 XF86AudioMute
 #	amixer set Master toggle
+#	pactl set-sink-mute @DEFAULT_SINK@ toggle
 	pamixer -t
+
+XF86AudioMicMute
+#	amixer set Capture toggle
+#	pactl set-source-mute @DEFAULT_SOURCE@ toggle
+	pamixer -t --default-source
 
 XF86MonBrightnessUp
 	xbacklight +2

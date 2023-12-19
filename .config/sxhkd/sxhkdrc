@@ -29,20 +29,23 @@ super + shift + p
 
 
 # XF86
-# check pactl how works and how to set volume using %
+
 XF86AudioLowerVolume
 #	amixer set Master 5%-
-#	pactl set-sink-volume @DEFAULT_SINK@ -1000
+#	pactl set-sink-volume @DEFAULT_SINK@ -5%
+#	wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 	pamixer -d 5
 
 XF86AudioRaiseVolume
 #	amixer set Master 5%+
-#	pactl set-sink-volume @DEFAULT_SINK@ +1000
+#	pactl set-sink-volume @DEFAULT_SINK@ +5%
+#	wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
 	pamixer -i 5
 
 XF86AudioMute
 #	amixer set Master toggle
 #	pactl set-sink-mute @DEFAULT_SINK@ toggle
+#	wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 	pamixer -t
 
 XF86AudioMicMute
@@ -51,11 +54,13 @@ XF86AudioMicMute
 	pamixer -t --default-source
 
 XF86MonBrightnessUp
-	xbacklight +2
+#	xbacklight +2
+	brightnessctl s +2%
+
 
 XF86MonBrightnessDown
-	xbacklight -2
-
+#	xbacklight -2
+	brightnessctl s 2%-
 
 
 # LAUNCHERS

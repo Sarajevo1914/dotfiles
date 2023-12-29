@@ -14,6 +14,13 @@ set ignorecase true
 set mouse true
 set ratios '1:2'
 set sixel true
+# set previewer ~/.config/lf/lf_kitty_preview
+#set cleaner ~/.config/lf/lf_kitty_clean
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
+
 
 # cmd/funcions
 

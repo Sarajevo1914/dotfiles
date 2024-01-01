@@ -10,12 +10,18 @@ set shell sh
 set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
+set sortby name
 set ignorecase true
+set period 1
 set mouse true
 set ratios '1:2'
+
 set sixel true
-# set previewer ~/.config/lf/lf_kitty_preview
+#set icons
+
+#set previewer ~/.config/lf/lf_kitty_preview
 #set cleaner ~/.config/lf/lf_kitty_clean
+
 set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
@@ -23,10 +29,6 @@ set cleaner ctpvclear
 
 
 # cmd/funcions
-
-cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
-
-#cmd setbg "$1"
 
 cmd bulkrename $vidir
 
@@ -43,7 +45,22 @@ cmd extract ${{
     printf "%s\n\t" "$fx"
     printf "extract?[y/N]"
     read ans
-    [ $ans = "y" ] && aunpack $fx
+    [ $ans = "y" ] && {
+        case $fx in
+            *.tar.bz2)   tar xjf $fx     ;;
+            *.tar.gz)    tar xzf $fx     ;;
+            *.bz2)       bunzip2 $fx     ;;
+            *.rar)       unrar e $fx     ;;
+            *.gz)        gunzip $fx      ;;
+            *.tar)       tar xf $fx      ;;
+            *.tbz2)      tar xjf $fx     ;;
+            *.tgz)       tar xzf $fx     ;;
+            *.zip)       unzip $fx       ;;
+            *.Z)         uncompress $fx  ;;
+            *.7z)        7z x $fx        ;;
+            *.tar.xz)    tar xf $fx      ;;
+        esac
+    }
 }}
 
 cmd delete ${{
@@ -66,11 +83,9 @@ cmd delete ${{
 
 # Bindings
 
+# some Defaults i care
+
 map <enter> shell
-
-map ` !true
-
-map b $setbg $f
 
 # execute current file (must be executable)
 map x $$f
@@ -79,18 +94,45 @@ map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
 
-map <c-m> mkdir
+map E extract
+
+map q quit
+
+map k up
+map j down
+map h updir
+map l open
+map <up> up
+map <down> down
+map <left> updir
+map <right> open
+
+map <c-u> half-up
+map <c-d> half-down
+map <c-b> page-up
+map <c-f> page-down
+
+map <pgup> page-up
+map <pgdn> page-down
 
 map gg top
+map G bottom
 map <home> top
-map K top
-map GG bottom
-map J bottom
 map <end> bottom
 
-# map H high
-# map M middle
-# map L low
+map J bottom
+map K top
+
+
+# redraw the select item
+map <c-l> redraw
+
+# reload the current dir?
+map <c-r> reload
+
+
+map f find
+map / search
 
 map v invert
 map u unselect
@@ -101,24 +143,38 @@ map p paste
 map y copy
 map x cut
 
-# map Dd trash
-# map dr restore-trash
+#map Dd trash
+#map dr restore-trash
 
-map E extract
-# map C copyto
-# map M moveto
+# Comb
 
-
-
+map zh set hidden!
+map zr set reverse!
+map zn set info
+map zs set info size
+map zt set info time
+map za set info size:time
+map sn :set sortby natural; set info
+map ss :set sortby size; set size
+map st :set sortby time; set time
+map sa :set sortby atime; set atime
+map sc :set sortby ctime; set ctime
+map se :set sortby ext; set info
+map <space> :toggle; down
 
 # Rename
 
-map A rename # at the very end
+map A :rename; cmd-end # at the very end
 map c push A<c-u> # new rename
-map I push A<c-a> # at the very beginning
-map i push A<a-b><a-b><a-f> # before extension
-map a push A<a-b> # after extension
+map I :rename; cmd-home # at the very beginning
+map i :rename # before extension
+map a :rename; cmd-right # after extension
 map B bulkrename
+
+# unmaping {H,M,L} {high,middle,low}
+map H
+map M
+map L
 
 
 # Shortcuts
@@ -129,5 +185,5 @@ map gp cd ~/Pictures
 map gc cd ~/.config
 map gM cd /mnt
 map gs cd ~/.local/bin
-map gH cd ~
+map gh cd ~
 map gT cd ~/.local/share/Trash/files

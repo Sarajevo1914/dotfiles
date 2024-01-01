@@ -21,6 +21,7 @@ PS1='[\u@\h \W]\$ '
 ### "less" as manpager
 export MANPAGER="less"
 
+export EDITOR="nvim"
 
 # Load aliases and shortcuts if existent
 ### CHECK LUKE SMITH

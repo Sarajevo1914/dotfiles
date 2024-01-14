@@ -81,6 +81,11 @@ cmd delete ${{
 #    [ $ans = "y" ] && trash-put -- $fx
 #}}
 
+
+cmd on-select &{{
+    lf -remote "send $id set statfmt \"$(eza -lbdg --total-size --time-style long-iso --color=always "$f")\""
+}}
+
 # Bindings
 
 # some Defaults i care

@@ -31,11 +31,14 @@ alias \
 	yta="yt -x -f bestaudio/best" \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner"	\
+	z="zoxide"	\
 
 
 # These common commands are just too long! Abbreviate them
 alias \
 	ns="nsxiv-rifle"	\
+	powersave="sudo cpupower frequency-set -g powersave"	\
+	performance="sudo cpupower frequency-set -g performance"	\
 
 
 # Colorize commands when possible

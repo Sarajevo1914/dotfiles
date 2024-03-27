@@ -11,7 +11,7 @@
 # Verbosity and settings that you pretty much just always are going to want
 alias \
 	cp="cp -iv"	\
-	..="cd .."	\
+	..="z .."	\
 	mv="mv -iv" \
 	rm="rm -vI" \
 	bc="bc -ql" \
@@ -32,6 +32,11 @@ alias \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner"	\
 	z="zoxide"	\
+	tfan-auto="echo level auto | sudo tee /proc/acpi/ibm/fan"	\
+	tfan-7="echo level 7 | sudo tee /proc/acpi/ibm/fan" 	\
+	tfan-full="echo level disengaged | sudo tee /proc/acpi/ibm/fan"	\
+	hx="helix"	\
+
 
 
 # These common commands are just too long! Abbreviate them

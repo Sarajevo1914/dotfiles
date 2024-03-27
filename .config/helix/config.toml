@@ -1,0 +1,15 @@
+theme = "sonokai"
+
+[editor]
+true-color = true
+mouse = true
+middle-click-paste = true
+line-number = "relative"
+color-modes = true
+
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator", ]
+right = ["diagnostics", "selections", "file-type","register", "position","total-line-numbers", "file-encoding","file-line-ending" ]
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "VISUAL"

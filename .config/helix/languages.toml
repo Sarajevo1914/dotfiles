@@ -1,3 +1,6 @@
+[language-server.markdown]
+command = "/sbin/marksman"
+
 [[language]]
 name = "c"
 indent = { tab-width = 8, unit = "    " }
@@ -9,4 +12,3 @@ indent = { tab-width = 8, unit = "    " }
 [[language]]
 name = "markdown"
 indent = { tab-width = 8, unit = "    " }
-

@@ -1,5 +1,4 @@
-#
-# ~/.bashrc
+# # ~/.bashrc
 #
 
 
@@ -63,5 +62,7 @@ SAVEHIST=10000000
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     export MOZ_ENABLE_WAYLAND=1
 fi
+
+export PATH=/sbin/marksman:$PATH
 
 eval "$(zoxide init bash)"

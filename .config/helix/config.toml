@@ -6,6 +6,10 @@ mouse = true
 middle-click-paste = true
 line-number = "relative"
 color-modes = true
+auto-completion = true
+auto-format = true
+auto-info = true
+auto-pairs = true
 
 [editor.statusline]
 left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator", ]
@@ -13,3 +17,43 @@ right = ["diagnostics", "selections", "file-type","register", "position","total-
 mode.normal = "NORMAL"
 mode.insert = "INSERT"
 mode.select = "VISUAL"
+
+[editor.lsp]
+enable = true
+# display-message = true
+snippets = true
+
+# [editor.auto-pairs]
+# '(' = ')'
+# '{' = '}'
+# '[' = ']'
+# '"' = '"'
+# '`' = '`'
+# '<' = '>'
+
+[editor.whitespace]
+# render = ["tab", "newline"]
+# or control each character
+[editor.whitespace.render]
+# space = "all"
+tab = "all"
+# nbsp = "none"
+# nnbsp = "none"
+newline = "all"
+
+[editor.whitespace.characters]
+# space = "·"
+# nbsp = "⍽"
+# nnbsp = "␣"
+# tab = "→"
+# newline = "⏎"
+tabpad = "·" # Tabs will look like "→···" (depending on tab width)
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 25 # increase value to reduce forced mid-word wrapping
+max-indent-retain = 0
+wrap-indicator = ""  # set wrap-indicator to "" to hide it
+
+[editor.smart-tab]
+enable = false

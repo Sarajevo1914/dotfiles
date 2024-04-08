@@ -5,25 +5,9 @@
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
+    background-color: #000000;
     color: #ffffff;
-    transition-property: background-color;
-    transition-duration: .5s;
 }
-
-window#waybar.hidden {
-    opacity: 0.2;
-}
-
-/*
-window#waybar.empty {
-    background-color: transparent;
-}
-window#waybar.solo {
-    background-color: #FFFFFF;
-}
-*/
 
 window#waybar.termite {
     background-color: #3F3F3F;
@@ -49,13 +33,13 @@ button:hover {
 }
 
 #workspaces button {
-    padding: 0 5px;
+    padding: 0 3px;
     background-color: transparent;
     color: #ffffff;
 }
 
 #workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
+
 }
 
 #workspaces button.focused {
@@ -67,6 +51,16 @@ button:hover {
     background-color: #eb4d4b;
 }
 
+#workspaces button.active {
+    border-bottom: 3px solid lightblue;
+}
+/* CHECK THIS LATER
+#workspaces button.visible {
+    background-color: red;
+    color: red;
+    background: red;
+}
+*/
 #mode {
     background-color: #64727D;
     box-shadow: inset 0 -3px #ffffff;
@@ -297,7 +291,7 @@ label:focus {
 }
 
 #scratchpad.empty {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 #privacy {

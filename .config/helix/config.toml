@@ -10,6 +10,7 @@ auto-completion = true
 auto-format = true
 auto-info = true
 auto-pairs = true
+bufferline = "always"
 
 [editor.statusline]
 left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator", ]

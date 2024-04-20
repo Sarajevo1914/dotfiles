@@ -1,2 +1,4 @@
+set sandbox strict
+set page-padding 5
 set default-bg '#1d2021'
 set recolor-lightcolor '#282828'

@@ -63,6 +63,8 @@ cmd extract ${{
     }
 }}
 
+cmd mkdir $mkdir -p "$@"
+
 cmd delete ${{
     clear; tput cup $(($(tput lines)/3)); tput bold
     set -f
@@ -128,13 +130,11 @@ map <end> bottom
 map J bottom
 map K top
 
-
 # redraw the select item
 map <c-l> redraw
 
 # reload the current dir?
 map <c-r> reload
-
 
 map f find
 map / search
@@ -177,6 +177,7 @@ map a :rename; cmd-right # after extension
 map B bulkrename
 
 # unmaping {H,M,L} {high,middle,low}
+
 map H
 map M
 map L

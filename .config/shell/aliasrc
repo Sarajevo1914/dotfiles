@@ -24,7 +24,7 @@ alias \
 	zsa='eza -a --group-directories-first --icons'	\
 	zss='eza -labg --group-directories-first --time-style long-iso --icons'	\
 	zl='eza -labg --group-directories-first --total-size --time-style long-iso --icons'	\
-	zls='eza -labrsg size --group-directories-first --total-size --time-style long-iso --icons'	\
+	zls='eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons'	\
 	rsync="rsync -vrPlu" \
 	mkd="mkdir -pv" \
 	yt="yt-dlp --embed-metadata -i" \

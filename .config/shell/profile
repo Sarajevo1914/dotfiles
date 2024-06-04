@@ -17,6 +17,13 @@ export TERMINAL="footclient"
 export TERMINAL_PROG="footclient"
 export BROWSER="firefox"
 
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+  export MOZ_ENABLE_WAYLAND=1
+fi
+
+# adding to Path
+export PATH=/sbin/marksman:$PATH
+
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"

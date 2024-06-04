@@ -7,7 +7,7 @@ text/plain=text.desktop;
 text/markdown=text.desktop;
 text/x-shellscript=text.desktop;
 text/x-csrc=text.desktop;
-text/html=firefox.desktop;
+text/html=browser.desktop;
 
 image/jpg=img.desktop;
 image/jpeg=img.desktop;

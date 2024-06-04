@@ -1,106 +1,77 @@
-
-# The following lines were added by compinstall
-
-zstyle ':completion:*' completer _complete _ignored
-zstyle ':completion:*' expand prefix suffix
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
-zstyle ':completion:*' list-suffixes true
-zstyle ':completion:*' menu select=1
-zstyle ':completion:*' preserve-prefix '//[^/]##/'
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle ':completion:*' squeeze-slashes true
-zstyle ':completion:*' use-compctl true
-zstyle :compinstall filename '/home/ecarus/.zshrc'
-
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-setopt autocd
-unsetopt beep
-# bindkey -v
-# End of lines configured by zsh-newuser-install
-
-
-#
-### User config
-#
-
-PS1="[%n@%M %~]$ "
-
-# Load aliases and shortcuts if existent
-### CHECK LUKE SMITH
-#[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc"
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc"
-#[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc"
-
-
-# Load colors
-autoload -U colors && colors
-
-# Disable ctrl-s to freeze terminal
-stty stop undef
-
-
-if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-    export MOZ_ENABLE_WAYLAND=1
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Adds `~/.local/bin` to $PATH
-export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
 
+# new zsh config because the old one is a mess, i dont undestando because is
+# just a copy-pasta from luke and random sites
+# follwing this video for this config: https://www.youtube.com/watch?v=ud7YxC33Z3w
 
-export TERMINAL="kitty"
-export BROWSER="firefox"
+# set zinit plugin manager
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
 
-### SET MANPAGER
+# prompt powerlevel10k, check https://github.com/sindresorhus/pure
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-### "bat" as manpager
-# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# Loading Files
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc"
 
-### "vim" as manpager
-# export MANPAGER='/bin/bash -c "vim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
+# Keybidins check for -e and -vi
+#bindkey -e
+#bindkey '^p' history-search-backward
+#bindkey '^n' history-search-forward
+# add ctrl-left and right to change cursor in the beging word
 
-### "nvim" as manpager
-#export MANPAGER="nvim -c 'set ft=man' -"
-#export MANPAGER="nvim +Man!"
+# zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
 
-### "less" as manpager
-#export MANPAGER="less"
+# Load completions
+autoload -U compinit && compinit
+zinit cdreplay -q
 
-# Use vim keys in tab complete menu
-#bindkey -M menuselect 'h' vi-backward-char
-#bindkey -M menuselect 'k' vi-up-line-or-history
-#bindkey -M menuselect 'l' vi-forward-char
-#bindkey -M menuselect 'j' vi-down-line-or-history
-#bindkey -v '^?' backward-delete-char
+# Completions styling
+zstyle ':completions:*' matcher-list 'm:{a-z]={A-Za-z}}'
+zstyle ':completions:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completions:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+# change ls to exa/eza
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Change cursor shape for different vi modes
-function zle-keymap-select () {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[1 q';;      # block
-        viins|main) echo -ne '\e[5 q';; # beam
-    esac
-}
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt
+# Adding snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::command-not-found
 
+# HISTORY
+HISTSIZE=10000
+HISTFILE=$ZDOTDIR/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_space
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
+# set optns check man zshoptions
+setopt autocd
+unsetopt beep
 
-# Load syntax highlighting; should be last
-# source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+# Shell integrations
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
-#source ~/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.config/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source ~/.config/zsh/zsh-completions/src
-source ~/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

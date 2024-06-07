@@ -21,6 +21,15 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
   export MOZ_ENABLE_WAYLAND=1
 fi
 
+
+# Man pager
+
+# bat, dont work with mandoc check
+# https://github.com/sharkdp/bat/issues/1145
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+
 # adding to Path
 export PATH=/sbin/marksman:$PATH
 

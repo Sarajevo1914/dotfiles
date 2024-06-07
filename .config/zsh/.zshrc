@@ -33,6 +33,11 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light MichaelAquilina/zsh-you-should-use
+#zinit light MichaelAquilina/zsh-auto-notify
+
+export YSU_MESSAGE_POSITION="after"
+
 
 # Load completions
 autoload -U compinit && compinit
@@ -60,14 +65,29 @@ HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
-setopt hist_ignore_space
-setopt hist_save_no_dups
+setopt hist_ignore_all_dups
 setopt hist_ignore_dups
+setopt hist_save_no_dups
 setopt hist_find_no_dups
 
-# set optns check man zshoptions
+# set opts check man zshoptions
 setopt autocd
 unsetopt beep
+setopt autocd
+setopt aliases 
+
+# foot terminal integration
+function osc7-pwd() {
+    emulate -L zsh # also sets localoptions for us
+    setopt extendedglob
+    local LC_ALL=C
+    printf '\e]7;file://%s%s\e\' $HOST ${PWD//(#m)([^@-Za-z&-;_~])/%${(l:2::0:)$(([##16]#MATCH))}}
+}
+
+function chpwd-osc7-pwd() {
+    (( ZSH_SUBSHELL )) || osc7-pwd
+}
+add-zsh-hook -Uz chpwd chpwd-osc7-pwd
 
 # Shell integrations
 eval "$(fzf --zsh)"

@@ -76,6 +76,13 @@ unsetopt beep
 setopt autocd
 setopt aliases 
 
+# yt-dlp options to work
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
 # foot terminal integration
 function osc7-pwd() {
     emulate -L zsh # also sets localoptions for us

@@ -23,13 +23,10 @@ bspc config gapless_monocle      true
 #bspc rule -a Kupfer.py focus=on
 #bspc rule -a Screenkey manage=off
 
-
 bspc rule -a gammy state=floating
 bspc rule -a mpv state=floating
 bspc rule -a mediainfo-gui state=floating
 bspc rule -a galculator state=floating
-
-
 
 bspc config focus_follows_pointer true
 

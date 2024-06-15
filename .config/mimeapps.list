@@ -1,14 +1,11 @@
 [Added Associations]
 
-
 [Default Applications]
-
 text/plain=text.desktop;
 text/markdown=text.desktop;
 text/x-shellscript=text.desktop;
 text/x-csrc=text.desktop;
 text/html=browser.desktop;
-
 image/jpg=img.desktop;
 image/jpeg=img.desktop;
 image/png=img.desktop;
@@ -30,7 +27,6 @@ image/x-portable-bitmap=img.desktop;
 image/x-portable-graymap=img.desktop;
 image/x-tga=img.desktop;
 image/x-xpixmap=img.desktop;
-
 video/x-msvideo=video.desktop;
 video/x-ms-wmv=video.desktop;
 video/mpeg=video.desktop;
@@ -39,10 +35,8 @@ video/webm=video.desktop;
 video/x-matroska=video.desktop;
 video/mp4=video.desktop;
 video/quicktime=video.desktop;
-
 audio/x-opus+ogg=video.desktop;
 audio/vnd.dts=mediainfo-gui.desktop;
-
 application/postscript=pdf.desktop;
 application/pdf=pdf.desktop;
 application/x-bittorrent=torrent.desktop;
@@ -53,7 +47,7 @@ application/x-extension-shtml=firefox.desktop;
 application/xhtml+xml=firefox.desktop;
 application/x-extension-xhtml=firefox.desktop;
 application/x-extension-xht=firefox.desktop;
-
+application/x-bittorrent=org.qbittorrent.qBittorrent.desktop;
 x-scheme-handler/mailto=mail.desktop;
 x-scheme-handler/http=firefox.desktop;
 x-scheme-handler/https=firefox.desktop;

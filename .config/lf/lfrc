@@ -83,7 +83,6 @@ cmd delete ${{
 #    [ $ans = "y" ] && trash-put -- $fx
 #}}
 
-
 cmd on-select &{{
     lf -remote "send $id set statfmt \"$(eza -lbdg --total-size --time-style long-iso --color=always "$f")\""
 }}
@@ -114,8 +113,6 @@ map <down> down
 map <left> updir
 map <right> open
 
-map <c-u> half-up
-map <c-d> half-down
 map <c-b> page-up
 map <c-f> page-down
 
@@ -181,7 +178,6 @@ map B bulkrename
 map H
 map M
 map L
-
 
 # Shortcuts
 

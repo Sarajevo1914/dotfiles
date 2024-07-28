@@ -10,8 +10,6 @@
 
 # Verbosity and settings that you pretty much just always are going to want
 alias \
-	cp="cp -iv"	\
-	..="z .."	\
 	mv="mv -iv" \
 	rm="rm -vI" \
 	bc="bc -ql" \
@@ -49,6 +47,16 @@ alias \
 	performance="sudo cpupower frequency-set -g performance"	\
 	hx="helix"	\
 	z="zoxide"	\
+	cp="cp -iv"	\
+	..="cd .."	\
+	...="cd ../.."	\
+	....="cd ../../.."	\
+	myip="curl ipinfo.io/ip"
+
+	# Safety Nets
+	alias \
+		rm="rm -i"	\
+		rmdir="rmdir --ignore-fail-on-non-empty"	\
 
 # Colorize commands when possible
 alias \

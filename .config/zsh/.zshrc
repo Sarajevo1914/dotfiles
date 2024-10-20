@@ -75,6 +75,7 @@ setopt autocd
 unsetopt beep
 setopt autocd
 setopt aliases 
+setopt nocaseglob
 
 # yt-dlp options to work
 autoload -Uz bracketed-paste-magic

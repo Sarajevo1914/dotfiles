@@ -1,13 +1,11 @@
 // based on this video https://www.youtube.com/watch?v=KfOYXvRMcIQ
 * {
-  border-radius: 3px;
   border: none;
 }
 window {
   font-size: 28px;
   background-color: rgba(50, 50, 50, 0.9);
   color: white;
-  border-bottom: 3px solid white;
 }
 
 #entry{
@@ -25,6 +23,7 @@ window {
 
 #input{
   background-color: rgba(50, 50, 50, 0.5);
+  border: none;
   color: white;
   padding: 0.25em;
 }

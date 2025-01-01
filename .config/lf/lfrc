@@ -1,7 +1,4 @@
-#
-# lfrc
-#
-
+#!/bin/sh
 
 # Basic settings
 
@@ -15,18 +12,43 @@ set ignorecase true
 set period 1
 set mouse true
 set ratios '1:2'
-
 set sixel true
-#set icons
 
-#set previewer ~/.config/lf/lf_kitty_preview
-#set cleaner ~/.config/lf/lf_kitty_clean
+
+### LF PREVIEWS
+# use the one that work on your terminal
+# for some rason some terminal dont work with vanila ctpv and stpv config
+# like alacritty foot, etc.
+# only work on those terminal using the sixel.sh
+# kitty work only on ctpv and the kitty protocols sh
+# but i like the text preview form ctpv that the pistol...
+
+### TODO
+# make a universal script that work on any terminal
+# iven if not support sixel or the kitty protocol
+# option to preview image, video, audio files, any kind of text, PDF, etc. 
+
+# kitty protocol, pistol for fallback
+# require chroma, archiver
+
+# set previewer ~/.config/lf/preview-kitty.sh
+# set cleaner ~/.config/lf/cleaner-kitty.sh
+
+# set previewer ~/.config/lf/sixel.sh
+
+# ctpv preview
 
 set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
 &ctpvquit $id
 
+# stpv preview
+
+# set previewer stpv
+# set cleaner stpvimgclr
+# &stpvimg --listen $id
+# cmd on-quit $stpvimg --end $id
 
 # cmd/funcions
 
@@ -39,29 +61,39 @@ cmd open &{{
     esac
 }}
 
+# luke smith script
+# cmd extract ${{
+#     clear; tput cup $(($(tput lines)/3)); tput bold
+#     set -f
+#     printf "%s\n\t" "$fx"
+#     printf "extract?[y/N]"
+#     read ans
+#     [ $ans = "y" ] && {
+#         case $fx in
+#             *.tar.bz2)   tar xjf $fx     ;;
+#             *.tar.gz)    tar xzf $fx     ;;
+#             *.bz2)       bunzip2 $fx     ;;
+#             *.rar)       unrar e $fx     ;;
+#             *.gz)        gunzip $fx      ;;
+#             *.tar)       tar xf $fx      ;;
+#             *.tbz2)      tar xjf $fx     ;;
+#             *.tgz)       tar xzf $fx     ;;
+#             *.zip)       unzip $fx       ;;
+#             *.Z)         uncompress $fx  ;;
+#             *.7z)        7z x $fx        ;;
+#             *.tar.xz)    tar xf $fx      ;;
+#         esac
+#     }
+# }}
+
+
+# ouch decompress integraiton
+
 cmd extract ${{
-    clear; tput cup $(($(tput lines)/3)); tput bold
     set -f
-    printf "%s\n\t" "$fx"
-    printf "extract?[y/N]"
-    read ans
-    [ $ans = "y" ] && {
-        case $fx in
-            *.tar.bz2)   tar xjf $fx     ;;
-            *.tar.gz)    tar xzf $fx     ;;
-            *.bz2)       bunzip2 $fx     ;;
-            *.rar)       unrar e $fx     ;;
-            *.gz)        gunzip $fx      ;;
-            *.tar)       tar xf $fx      ;;
-            *.tbz2)      tar xjf $fx     ;;
-            *.tgz)       tar xzf $fx     ;;
-            *.zip)       unzip $fx       ;;
-            *.Z)         uncompress $fx  ;;
-            *.7z)        7z x $fx        ;;
-            *.tar.xz)    tar xf $fx      ;;
-        esac
-    }
+    ouch decompress $fx
 }}
+
 
 cmd mkdir $mkdir -p "$@"
 
@@ -89,8 +121,6 @@ cmd on-select &{{
 
 # Bindings
 
-# some Defaults i care
-
 map <enter> shell
 
 # execute current file (must be executable)
@@ -100,7 +130,7 @@ map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
 
-map E extract
+map E :extract; reload
 
 map q quit
 
@@ -126,6 +156,8 @@ map <end> bottom
 
 map J bottom
 map K top
+map <a-j> page-down
+map <a-k> page-up
 
 # redraw the select item
 map <c-l> redraw
@@ -155,7 +187,7 @@ map zr set reverse!
 map zn set info
 map zs set info size
 map zt set info time
-map za set info size:time
+map za :set sortby name; set info size
 map sn :set sortby natural; set info
 map ss :set sortby size; set size
 map st :set sortby time; set time
@@ -163,7 +195,9 @@ map sa :set sortby atime; set atime
 map sc :set sortby ctime; set ctime
 map se :set sortby ext; set info
 map <space> :toggle; down
-
+map <c-space> :toggle
+# map <a-space> :toggle; up # dont work
+ 
 # Rename
 
 map A :rename; cmd-end # at the very end

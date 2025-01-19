@@ -27,7 +27,6 @@ bspc rule -a galculator state=floating
 
 
 udiskie &
-flameshot &
 lxpolkit &
 lxsession &
 #gammy &

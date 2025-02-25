@@ -1,0 +1,21 @@
+/* For styling the rendered Markdown */
+
+body {
+    font-size: 20px; /* Change this value to your desired font size */
+}
+
+h1 {
+    font-size: 1.75em; /* Adjust heading sizes as needed */
+}
+
+h2 {
+    font-size: 1.66em;
+}
+
+h3 {
+    font-size: 1.33em;
+}
+
+p {
+    font-size: 1em; /* Paragraph text size */
+}

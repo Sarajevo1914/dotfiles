@@ -22,6 +22,7 @@ alias \
 	tfan-auto="echo level auto | sudo tee /proc/acpi/ibm/fan"	\
 	tfan-7="echo level 7 | sudo tee /proc/acpi/ibm/fan" 	\
 	tfan-full="echo level disengaged | sudo tee /proc/acpi/ibm/fan"	\
+	reflector_update='sudo reflector -f 30 -l 30 -a 6 --sort rate --verbose --save /etc/pacman.d/mirrorlist'	\
 
 # eza
 alias \

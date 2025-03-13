@@ -22,8 +22,9 @@ shopt -s expand_aliases
 # ignore upper and lowercase when TAB completion
 bind "set completion-ignore-case on"
 
+export HISTFILE=$XDG_CONFIG_HOME/shell/bash_history
 HISTSIZE=10000000
-SAVEHIST=10000000
+HISTFILESIZE=10000000
 
 # foot terminal shell integration
 # usint ctrl shift n open a new terminal in the current working directory

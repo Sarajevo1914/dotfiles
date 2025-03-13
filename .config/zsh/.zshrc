@@ -58,8 +58,8 @@ zinit snippet OMZP::archlinux
 zinit snippet OMZP::command-not-found
 
 # HISTORY
-HISTSIZE=10000
-HISTFILE=$ZDOTDIR/.zsh_history
+HISTSIZE=10000000
+HISTFILE=$ZDOTDIR/zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 setopt appendhistory

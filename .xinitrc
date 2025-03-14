@@ -1,0 +1,1 @@
+/home/ecarus/.config/x11/xinitrc

@@ -3,7 +3,7 @@
 # WIP
 # TODO
 # Cursor theme don't work very well on QT, Electron apps, java apps and others
-# IA suggest to to export var to xinitrc xprofile and Xresources, find a way to add
+# IA GPT and Mistral suggest to to export var to xinitrc xprofile and Xresources, find a way to add
 # changes data without modify existent content
 
 CONFIG_FILE="$HOME/.config/theme_switcher.conf"

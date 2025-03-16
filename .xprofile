@@ -1,1 +1,13 @@
-/home/ecarus/.config/x11/xprofile
+#!/bin/sh
+
+# Ensure that xrdb has finished running before moving on to start the WM/DE.
+[ -n "$xrdbpid" ] && wait "$xrdbpid"
+
+if [ -f ~/.xinitrc ]; then
+    source ~/.xinitrc
+fi
+
+
+# testing 
+export XCURSOR_THEME=$CURSOR_THEME
+export XCURSOR_SIZE=24

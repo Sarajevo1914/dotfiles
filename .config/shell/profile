@@ -44,7 +44,7 @@ export PATH=/sbin/marksman:$PATH
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
-export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
+#export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
 #export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch-config"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc-2.0"
@@ -71,3 +71,17 @@ export RENPY_PATH_TO_SAVES="$XDG_DATA_HOME"
 
 [ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1
 
+# Set platform theme for Qt5 and Qt6
+
+#export QT_QPA_PLATFORMTHEME=qt5ct
+#export QT_QPA_PLATFORMTHEME=qt6ct
+
+export QT_QPA_PLATFORMTHEME=qt5ct
+export QT6_QPA_PLATFORMTHEME=qt6ct
+
+
+#if [ "$(qmake --version 2>/dev/null | grep 'Qt 6')" ]; then
+#    export QT_QPA_PLATFORMTHEME=qt6ct
+#else
+#    export QT_QPA_PLATFORMTHEME=qt5ct
+#fi

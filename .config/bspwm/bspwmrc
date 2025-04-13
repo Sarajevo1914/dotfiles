@@ -24,6 +24,7 @@ bspc rule -a gammy state=floating
 # bspc rule -a mpv state=floating
 bspc rule -a mediainfo-gui state=floating
 bspc rule -a galculator state=floating
+bspc rule -a Emacs state=tiled
 
 
 udiskie &

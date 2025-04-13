@@ -10,6 +10,7 @@ unsetopt PROMPT_SP 2>/dev/null
 
 # Add all directories in `~/.local/bin` to $PATH
 export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
+export PATH="$HOME/.config/emacs/bin:$PATH"
 
 # Default programs:
 export EDITOR="helix"
@@ -68,6 +69,8 @@ export ELECTRUMDIR="$XDG_DATA_HOME/electrum"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 export RENPY_PATH_TO_SAVES="$XDG_DATA_HOME"
+export EMACSINIT=$HOME/.config/emacs/init.el
+
 
 [ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1
 

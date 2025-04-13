@@ -135,6 +135,10 @@ super + w
 super + e
 	pcmanfm
 
+# EMACS
+super + a
+	emacsclient -c -a ""
+
 ### MEDIA KEYS
 
 XF86AudioLowerVolume

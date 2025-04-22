@@ -34,6 +34,11 @@
 (use-package gruvbox-theme)
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode)
+  :config
+  (setq markdown-command "pandoc"))
 
 ;; general settings
 
@@ -41,9 +46,11 @@
 (load-theme 'gruvbox-dark-soft t)
 
 ;; font
-(when (member "Iosevka Nerd Font" (font-family-list))
-  (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font-16"))
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 160))
+;;(set-frame-font "Iosevka Nerd Font 16" nil t)
+(set-face-attribute 'default nil
+                    :font "Iosevka Nerd Font"
+                    :height 160) ;; 160 = 16pt
+
 
 (setq inhibit-startup-message t) ; disable default splash screen
 (menu-bar-mode -1) ; disable bar
@@ -51,6 +58,18 @@
 (scroll-bar-mode -1) ; disable scroll bar
 (line-number-mode 1) ; show line number in minibuffer
 (column-number-mode 1) ; show column number
+(global-visual-line-mode 1) ; soft-wrap
+
+;; hunspell
+(setq ispell-program-name "hunspell")
+(setq ispell-dictionary nil)
+(setq ispell-extra-args '("-i" "utf-8" "-a"))
+(defun user/list-hunspell-dictionaries ()
+  "List all hunspell dictionary avalible in system."
+  (interactive)
+  (with-temp-buffer
+    (call-process "hunspell" nil t nil "-D")
+    (message "%s" (buffer-string))))
 
 ;; show parent () [] {}
 (show-paren-mode 1)
@@ -68,5 +87,5 @@
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 
 ;; dired
-(add hook 'dired-mode-hook 'auto-reverse-mode) ; auto refresh dir when file change
+(add-hook 'dired-mode-hook 'auto-reverse-mode) ; auto refresh dir when file change
 

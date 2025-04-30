@@ -60,17 +60,6 @@
 (column-number-mode 1) ; show column number
 (global-visual-line-mode 1) ; soft-wrap
 
-;; hunspell
-(setq ispell-program-name "hunspell")
-(setq ispell-dictionary nil)
-(setq ispell-extra-args '("-i" "utf-8" "-a"))
-(defun user/list-hunspell-dictionaries ()
-  "List all hunspell dictionary avalible in system."
-  (interactive)
-  (with-temp-buffer
-    (call-process "hunspell" nil t nil "-D")
-    (message "%s" (buffer-string))))
-
 ;; show parent () [] {}
 (show-paren-mode 1)
 (setq show-paren-delay 0)
@@ -87,5 +76,15 @@
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 
 ;; dired
-(add-hook 'dired-mode-hook 'auto-reverse-mode) ; auto refresh dir when file change
+(add-hook 'dired-mode-hook 'auto-revert-mode) ; auto refresh dir when file change
 
+;; hunspell
+(setq ispell-program-name "hunspell")
+(setq ispell-dictionary nil)
+(setq ispell-extra-args '("-i" "utf-8" "-a"))
+(defun user/list-hunspell-dictionaries ()
+  "List all hunspell dictionary avalible in system."
+  (interactive)
+  (with-temp-buffer
+    (call-process "hunspell" nil t nil "-D")
+    (message "%s" (buffer-string))))

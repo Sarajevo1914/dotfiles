@@ -13,9 +13,9 @@ export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
 export PATH="$HOME/.config/emacs/bin:$PATH"
 
 # Default programs:
-export EDITOR="helix"
-export TERMINAL="footclient"
-export TERMINAL_PROG="footclient"
+export EDITOR="nvim"
+export TERMINAL="kitty"
+export TERMINAL_PROG="kitty"
 export BROWSER="firefox"
 
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then

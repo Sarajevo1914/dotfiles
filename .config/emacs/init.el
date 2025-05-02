@@ -26,6 +26,9 @@
 (use-package consult)
 (use-package vertico :init (vertico-mode))
 (use-package marginalia :init (marginalia-mode))
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)))
 (use-package magit
   :defer t)
 (use-package gruber-darker-theme)
@@ -50,7 +53,6 @@
 (set-face-attribute 'default nil
                     :font "Iosevka Nerd Font"
                     :height 160) ;; 160 = 16pt
-
 
 (setq inhibit-startup-message t) ; disable default splash screen
 (menu-bar-mode -1) ; disable bar
@@ -88,3 +90,59 @@
   (with-temp-buffer
     (call-process "hunspell" nil t nil "-D")
     (message "%s" (buffer-string))))
+
+;; LSP
+(use-package lsp-mode
+  :hook ((prog-mode . lsp))
+  :commands lsp
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  (setq lsp-enable-snippet t
+	lsp-prefer-capf t))
+
+;; LSP UI
+(use-package lsp-ui
+  :after lsp-mode
+  :commands lsp-ui-mode
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-doc-enable t
+	lsp-ui-doc-show-with-cursor t
+	lsp-ui-sideline-enable t))
+
+;; Company
+(use-package company
+  :hook (after-init . global-company-mode)
+  :config
+  (setq company-idle-delay 0.2
+	company-minimum-prefix-length 2
+	company-tooltip-align-annotations t))
+
+;; Yasnippet
+(use-package yasnippet
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+;; Fly
+(use-package flycheck
+  :hook (prog-mode . flycheck-mode))
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map
+              ("C-;" . flyspell-correct-wrapper)))
+
+;; Eldoc
+(use-package eldoc
+  :hook (lsp-mode . eldoc-mode))
+
+;; Wich-key
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode)
+
+

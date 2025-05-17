@@ -31,10 +31,6 @@
   (setq completion-styles '(orderless)))
 (use-package magit
   :defer t)
-(use-package gruber-darker-theme)
-(use-package tao-theme)
-(use-package ample-theme)
-(use-package gruvbox-theme)
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 (use-package markdown-mode
@@ -42,10 +38,17 @@
   :mode ("\\.md\\'" . markdown-mode)
   :config
   (setq markdown-command "pandoc"))
+(use-package move-text
+  :config
+  (move-text-default-bindings)) ; enable default keybidings (M-up / M-down)
 
-;; general settings
 
 ;; theme
+(use-package gruber-darker-theme :defer t)
+(use-package tao-theme :defer t)
+(use-package ample-theme :defer t)
+(use-package gruvbox-theme :defer t)
+
 (load-theme 'gruvbox-dark-soft t)
 
 ;; font
@@ -54,6 +57,7 @@
                     :font "Iosevka Nerd Font"
                     :height 160) ;; 160 = 16pt
 
+;; general settings
 (setq inhibit-startup-message t) ; disable default splash screen
 (menu-bar-mode -1) ; disable bar
 (tool-bar-mode -1) ; disable toolbar
@@ -93,13 +97,24 @@
 
 ;; LSP
 (use-package lsp-mode
-  :hook ((prog-mode . lsp))
+  :hook ((prog-mode . my/conditionally-enable-lsp))
   :commands lsp
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
   (setq lsp-enable-snippet t
-	lsp-prefer-capf t))
+        lsp-prefer-capf t)
+
+  (defun my/conditionally-enable-lsp ()
+    "Enable `lsp` except for modes where it makes no sense."
+    (unless (or (derived-mode-p 'emacs-lisp-mode)
+                (derived-mode-p 'lisp-interaction-mode)
+                (derived-mode-p 'lisp-mode)
+                (derived-mode-p 'scheme-mode))
+      (lsp))))
+
+(setq lsp-language-id-configuration
+      (assq-delete-all 'emacs-lisp-mode lsp-language-id-configuration))
 
 ;; LSP UI
 (use-package lsp-ui
@@ -144,5 +159,3 @@
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
-
-

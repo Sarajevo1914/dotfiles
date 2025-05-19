@@ -76,10 +76,16 @@
 (global-display-line-numbers-mode)
 
 ;; whitespaces
-(defun user/set-up-whitespace-handling ()
-  (interactive)
-  (whitespace-mode 1)
+
+;; global whitespaces in all buffers
+(setq whitespace-style '(face trailing tabs spaces lines-tail empty indentation))
+(global-whitespace-mode 1)
+
+(defun user/delete-trailing-whitespace-on-save ()
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
+
+(add-hook 'prog-mode-hook #'user/delete-trailing-whitespace-on-save)
+(add-hook 'text-mode-hook #'user/delete-trailing-whitespace-on-save)
 
 ;; dired
 (add-hook 'dired-mode-hook 'auto-revert-mode) ; auto refresh dir when file change

@@ -105,7 +105,10 @@
   (setq lsp-enable-snippet t
         lsp-prefer-capf t)
 
-  (defun my/conditionally-enable-lsp ()
+ (setq lsp-language-id-configuration
+      (assq-delete-all 'emacs-lisp-mode lsp-language-id-configuration))
+
+ (defun my/conditionally-enable-lsp ()
     "Enable `lsp` except for modes where it makes no sense."
     (unless (or (derived-mode-p 'emacs-lisp-mode)
                 (derived-mode-p 'lisp-interaction-mode)
@@ -113,8 +116,6 @@
                 (derived-mode-p 'scheme-mode))
       (lsp))))
 
-(setq lsp-language-id-configuration
-      (assq-delete-all 'emacs-lisp-mode lsp-language-id-configuration))
 
 ;; LSP UI
 (use-package lsp-ui

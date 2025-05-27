@@ -78,7 +78,7 @@
 ;; whitespaces
 
 ;; global whitespaces in all buffers
-(setq whitespace-style '(face trailing tabs spaces lines-tail empty indentation))
+;(setq whitespace-style '(face trailing tabs spaces lines-tail empty indentation))
 (global-whitespace-mode 1)
 
 (defun user/delete-trailing-whitespace-on-save ()

@@ -1,11 +1,18 @@
-[Added Associations]
-
 [Default Applications]
-text/html=browser.desktop;
-text/markdown=text.desktop;
-text/plain=text.desktop;
-text/x-csrc=text.desktop;
-text/x-shellscript=text.desktop;
+application/epub+zip=pdf.desktop;
+application/pdf=pdf.desktop;
+application/postscript=pdf.desktop;
+application/rss+xml=rss.desktop;
+application/x-bittorrent=torrent.desktop;
+application/x-extension-htm=browser.desktop;
+application/x-extension-html=browser.desktop;
+application/x-extension-shtml=browser.desktop;
+application/x-extension-xht=browser.desktop;
+application/x-extension-xhtml=browser.desktop;
+application/x-shellscript=text.desktop;
+application/xhtml+xml=browser.desktop;
+audio/vnd.dts=video.desktop;
+audio/x-opus+ogg=video.desktop;
 image/avif=img.desktop;
 image/bmp=img.desktop;
 image/gif=img.desktop;
@@ -27,31 +34,21 @@ image/x-portable-bitmap=img.desktop;
 image/x-portable-graymap=img.desktop;
 image/x-tga=img.desktop;
 image/x-xpixmap=img.desktop;
+text/html=browser.desktop;
+text/markdown=text.desktop;
+text/plain=text.desktop;
+text/x-csrc=text.desktop;
+text/x-shellscript=text.desktop;
 video/mp4=video.desktop;
 video/mpeg=video.desktop;
 video/quicktime=video.desktop;
 video/webm=video.desktop;
-video/webm=video.desktop;
 video/x-matroska=video.desktop;
 video/x-ms-wmv=video.desktop;
 video/x-msvideo=video.desktop;
-audio/vnd.dts=mediainfo-gui.desktop;
-audio/x-opus+ogg=video.desktop;
-application/epub+zip=pdf.desktop
-application/pdf=pdf.desktop;
-application/postscript=pdf.desktop;
-application/rss+xml=rss.desktop
-application/x-bittorrent=org.qbittorrent.qBittorrent.desktop;
-application/x-bittorrent=torrent.desktop;
-application/x-extension-htm=firefox.desktop;
-application/x-extension-html=firefox.desktop;
-application/x-extension-shtml=firefox.desktop;
-application/x-extension-xht=firefox.desktop;
-application/x-extension-xhtml=firefox.desktop;
-application/xhtml+xml=firefox.desktop;
-x-scheme-handler/chrome=firefox.desktop;
-x-scheme-handler/http=firefox.desktop;
-x-scheme-handler/https=firefox.desktop;
+x-scheme-handler/chrome=browser.desktop;
+x-scheme-handler/http=browser.desktop;
+x-scheme-handler/https=browser.desktop;
 x-scheme-handler/mailto=mail.desktop;
 
 [Removed Associations]

@@ -65,6 +65,8 @@
 (line-number-mode 1) ; show line number in minibuffer
 (column-number-mode 1) ; show column number
 (global-visual-line-mode 1) ; soft-wrap
+(setq delete-by-moving-to-trash t)
+(setq make-backup-files t)
 
 ;; show parent () [] {}
 (show-paren-mode 1)

@@ -1,3 +1,4 @@
+;;; init.el --- Init -*- lexical-binding: t; -*-
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -41,7 +42,10 @@
 (use-package move-text
   :config
   (move-text-default-bindings)) ; enable default keybidings (M-up / M-down)
-
+(use-package python-mode
+  :ensure nil
+  :custom
+  (python-shell-interpreter "python3"))
 
 ;; theme
 (use-package gruber-darker-theme :defer t)
@@ -81,7 +85,7 @@
 
 ;; global whitespaces in all buffers
 ;(setq whitespace-style '(face trailing tabs spaces lines-tail empty indentation))
-(global-whitespace-mode 1)
+;(global-whitespace-mode 1)
 
 (defun user/delete-trailing-whitespace-on-save ()
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))

@@ -86,3 +86,7 @@ export QT6_QPA_PLATFORMTHEME=qt6ct
 #else
 #    export QT_QPA_PLATFORMTHEME=qt5ct
 #fi
+
+# this work?
+export XCURSOR_PATH=${XCURSOR_PATH}:~/.local/share/icons
+

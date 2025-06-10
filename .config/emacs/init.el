@@ -57,9 +57,10 @@
 
 ;; font
 ;;(set-frame-font "Iosevka Nerd Font 16" nil t)
-(set-face-attribute 'default nil
-                    :font "Iosevka Nerd Font"
-                    :height 160) ;; 160 = 16pt
+;; (set-face-attribute 'default nil
+;;                     :font "Iosevka Nerd Font"
+;;                     :height 160) ;; 160 = 16pt
+(add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font-14"))
 
 ;; general settings
 (setq inhibit-startup-message t) ; disable default splash screen

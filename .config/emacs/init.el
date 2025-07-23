@@ -2,7 +2,10 @@
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
       (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -13,80 +16,97 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Always use straight with use-package
-(setq straight-use-package-by-default t)
+;; test
+(when (executable-find "make")
+  (let* ((n (max 1 (1- (num-processors))))
+         (flags (format "-j%d" n)))
+    (setenv "MAKEFLAGS" flags)
+    (message "MAKEFLAGS set to %s" flags)))
 
-;; Install use-package
+;; Install use-package and enable for straight
 (straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 (require 'use-package)
 
-;; Suppress native compile warnings (optional)
-(setq native-comp-async-report-warnings-errors nil)
+;; General Settings
+(setq inhibit-startup-message t               ; Disable splash screen
+      delete-by-moving-to-trash t             ; Use system trash on delete
+      make-backup-files t                     ; Enable backups
+      backup-by-copying t                     ; Copy files for backup (safer for symlinks)
+      require-final-newline t                 ; Add newline at end of file on save
+      load-prefer-newer t                     ; Prefer newer versions of files
+      apropos-do-all t                        ; Show all results in apropos
+      mouse-yank-at-point t                   ; Yank at point, not click location
+      read-file-name-completion-ignore-case t ; Ignore case in file name completion
+      read-buffer-completion-ignore-case t    ; Ignore case in buffer name completion
+      vc-follow-symlinks t                    ; Follow symlinks without confirmation
+      tab-width 2                             ; Set tab width to 2
+      size-indication-mode t                  ; Show file size in mode line
+      global-recentf-mode t)                  ; Enable recent files list
 
-;; Install pkg
-(use-package consult)
-(use-package vertico :init (vertico-mode))
-(use-package marginalia :init (marginalia-mode))
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless)))
-(use-package magit
-  :defer t)
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" . markdown-mode)
-  :config
-  (setq markdown-command "pandoc"))
-(use-package move-text
-  :config
-  (move-text-default-bindings)) ; enable default keybidings (M-up / M-down)
-(use-package python-mode
-  :ensure nil
-  :custom
-  (python-shell-interpreter "python3"))
+(setq-default indent-tabs-mode nil)           ; Use spaces instead of tabs
 
-;; theme
-(use-package gruber-darker-theme :defer t)
-(use-package tao-theme :defer t)
-(use-package ample-theme :defer t)
-(use-package gruvbox-theme :defer t)
+;; UI Tweaks
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(line-number-mode 1)
+(column-number-mode 1)
+
+;; Behavior
+(global-visual-line-mode 1)                  ; Soft-wrap lines
+(global-auto-revert-mode 1)                  ; Auto-refresh changed files
+(savehist-mode 1)                            ; Save minibuffer history
+
+;; Parentheses
+(show-paren-mode 1)                          ; Highlight matching parentheses
+(setq show-paren-delay 0)
+(electric-pair-mode 1)                       ; Auto-insert closing delimiters
+
+;; Line Numbers
+(setq display-line-numbers-type 'relative)  ; Relative line numbers
+(global-display-line-numbers-mode 1)
+
+;; Themes
+(use-package gruber-darker-theme)
+(use-package gruvbox-theme)
 
 (load-theme 'gruvbox-dark-soft t)
 
-;; font
+;; Fonts
 ;;(set-frame-font "Iosevka Nerd Font 16" nil t)
 ;; (set-face-attribute 'default nil
 ;;                     :font "Iosevka Nerd Font"
 ;;                     :height 160) ;; 160 = 16pt
 (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font-14"))
 
-;; general settings
-(setq inhibit-startup-message t) ; disable default splash screen
-(menu-bar-mode -1) ; disable bar
-(tool-bar-mode -1) ; disable toolbar
-(scroll-bar-mode -1) ; disable scroll bar
-(line-number-mode 1) ; show line number in minibuffer
-(column-number-mode 1) ; show column number
-(global-visual-line-mode 1) ; soft-wrap
-(setq delete-by-moving-to-trash t)
-(setq make-backup-files t)
+;; Whitespaces
+;; TODO is not done yet
+;; GPT say is better put inside of use-package so...
+(use-package whitespace
+  :init
+  (setq whitespace-style
+        '(face tabs tab-mark
+               indentation indentation::tab indentation::space
+               space-before-tab space-before-tab::tab space-before-tab::space
+               space-after-tab space-after-tab::tab space-after-tab::space
+               trailing line lines-tail
+               missing-newline-at-eof))
 
-;; show parent () [] {}
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-(electric-pair-mode 1)
+  (setq whitespace-display-mappings
+        '((space-mark ?\xA0 [?⍽])
+          (tab-mark   ?\t  [?» ?\t])))
 
-;; line and relative numbers
-(setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode)
+  :hook ((prog-mode . whitespace-mode)
+         (text-mode . whitespace-mode))
 
-;; whitespaces
+  :config
+  (set-face-attribute 'whitespace-tab nil
+    :foreground "#fb4933" :background "#3c3836")
 
-;; global whitespaces in all buffers
-;(setq whitespace-style '(face trailing tabs spaces lines-tail empty indentation))
-;(global-whitespace-mode 1)
+  ;(set-face-attribute 'whitespace-space nil
+   ; :foreground "#fabd2f" :background "#3c3836")
+  )
 
 (defun user/delete-trailing-whitespace-on-save ()
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
@@ -94,82 +114,98 @@
 (add-hook 'prog-mode-hook #'user/delete-trailing-whitespace-on-save)
 (add-hook 'text-mode-hook #'user/delete-trailing-whitespace-on-save)
 
-;; dired
-(add-hook 'dired-mode-hook 'auto-revert-mode) ; auto refresh dir when file change
+;; Dired
+(add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto refresh if dir chage
 
-;; hunspell
-(setq ispell-program-name "hunspell")
-(setq ispell-dictionary nil)
-(setq ispell-extra-args '("-i" "utf-8" "-a"))
-(defun user/list-hunspell-dictionaries ()
-  "List all hunspell dictionary avalible in system."
-  (interactive)
-  (with-temp-buffer
-    (call-process "hunspell" nil t nil "-D")
-    (message "%s" (buffer-string))))
+;; Which-key
+(which-key-mode 1)
 
-;; LSP
-(use-package lsp-mode
-  :hook ((prog-mode . my/conditionally-enable-lsp))
-  :commands lsp
+;; Vertico
+(use-package vertico
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (vertico-mode)
   :config
-  (setq lsp-enable-snippet t
-        lsp-prefer-capf t)
+  (setq vertico-cycle t
+        vertico-resize nil))
 
- (setq lsp-language-id-configuration
-      (assq-delete-all 'emacs-lisp-mode lsp-language-id-configuration))
-
- (defun my/conditionally-enable-lsp ()
-    "Enable `lsp` except for modes where it makes no sense."
-    (unless (or (derived-mode-p 'emacs-lisp-mode)
-                (derived-mode-p 'lisp-interaction-mode)
-                (derived-mode-p 'lisp-mode)
-                (derived-mode-p 'scheme-mode))
-      (lsp))))
-
-
-;; LSP UI
-(use-package lsp-ui
-  :after lsp-mode
-  :commands lsp-ui-mode
-  :hook (lsp-mode . lsp-ui-mode)
+;; Marginalia
+(use-package marginalia
   :config
-  (setq lsp-ui-doc-enable t
-	lsp-ui-doc-show-with-cursor t
-	lsp-ui-sideline-enable t))
+  (marginalia-mode 1))
+
+;; Orderless
+(use-package orderless
+  :config
+  (setq completation-styles '(orderless)))
+
+;; Consult
+(use-package consult)
+
+;; Wgrep
+(use-package wgrep)
+
+;; Magit
+(use-package magit
+  :defer t)
+
+;; Rainbow-delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Company
 (use-package company
-  :hook (after-init . global-company-mode)
+  :init
+  (global-company-mode 1)
   :config
-  (setq company-idle-delay 0.2
-	company-minimum-prefix-length 2
-	company-tooltip-align-annotations t))
+(setq company-idle-delay 0.2
+      company-minimum-prefix-length 1
+      company-tooltip-align-annotations t
+      company-selection-wrap-around t))
 
-;; Yasnippet
-(use-package yasnippet
-  :hook (prog-mode . yas-minor-mode)
+;; Move-text
+(use-package move-text
   :config
-  (yas-reload-all))
+  (move-text-default-bindings)) ; M-up / M-down
+(global-set-key (kbd "M-p") 'move-text-up)
+(global-set-key (kbd "M-n") 'move-text-down)
 
-(use-package yasnippet-snippets
-  :after yasnippet)
+;; Markdown
+(use-package markdown-mode
+  :mode (("\\.md\\'" . gfm-mode))
+  :init
+  (setq markdown-command "pandoc"))
 
-;; Fly
-(use-package flycheck
-  :hook (prog-mode . flycheck-mode))
-(use-package flyspell-correct
-  :after flyspell
-  :bind (:map flyspell-mode-map
-              ("C-;" . flyspell-correct-wrapper)))
+;; Multiple cursor
+;; Read docs https://github.com/magnars/multiple-cursors.el
+(use-package multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->")         'mc/mark-next-like-this)
+(global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
+(global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
+(global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
-;; Eldoc
-(use-package eldoc
-  :hook (lsp-mode . eldoc-mode))
+;; Colorful-mode
+(use-package colorful-mode
+  :custom
+  (colorful-use-prefix t)
+  (colorful-only-strings 'only-prog)
+  (css-fontify-colors nil)
+  :config
+  (global-colorful-mode t))
 
-;; Wich-key
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode)
+;; Vterm
+(use-package vterm
+  :config
+  (setq vterm-max-scrollback 100000))
+
+(defun user/vterm-here ()
+  "Open vterm in the current buffer's directory."
+  (interactive)
+  (let ((default-directory (or (and (buffer-file-name)
+                                    (file-name-directory (buffer-file-name)))
+                               default-directory)))
+    (vterm)))
+
+(global-set-key (kbd "C-c t") 'user/vterm-here)
+;(global-set-key (kbd "C-t") 'vterm-toggle)

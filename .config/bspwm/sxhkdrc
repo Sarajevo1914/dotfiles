@@ -139,6 +139,9 @@ super + e
 super + a
 	emacsclient -c -a ""
 
+super + shift + a
+	emacs --debug-init
+
 ### MEDIA KEYS
 
 XF86AudioLowerVolume

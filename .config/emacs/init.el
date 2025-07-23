@@ -230,8 +230,8 @@
   :config
   (setq colorful-use-prefix t
         colorful-only-strings 'only-prog
-        css-fontify-color nil
-        global-colorful-mode t))
+        css-fontify-colors nil)
+  (global-colorful-mode t))
 
 ;; Vterm
 (use-package vterm

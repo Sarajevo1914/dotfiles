@@ -16,17 +16,10 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; test
-(when (executable-find "make")
-  (let* ((n (max 1 (1- (num-processors))))
-         (flags (format "-j%d" n)))
-    (setenv "MAKEFLAGS" flags)
-    (message "MAKEFLAGS set to %s" flags)))
-
 ;; Install use-package and enable for straight
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
 (require 'use-package)
+(setq straight-use-package-by-default t)
 
 ;; General Settings
 (setq inhibit-startup-message t               ; Disable splash screen
@@ -136,10 +129,21 @@
 ;; Orderless
 (use-package orderless
   :config
-  (setq completation-styles '(orderless)))
+  (setq completion-styles '(orderless)))
 
 ;; Consult
 (use-package consult)
+
+;; Embark
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult)
 
 ;; Wgrep
 (use-package wgrep)

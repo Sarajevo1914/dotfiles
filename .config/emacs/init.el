@@ -30,6 +30,7 @@
 
 ;; General Settings
 (setq inhibit-startup-message t               ; Disable splash screen
+      initial-scratch-message nil             ; Empty scratch buffer
       delete-by-moving-to-trash t             ; Use system trash on delete
       make-backup-files t                     ; Enable backups
       backup-by-copying t                     ; Copy files for backup (safer for symlinks)
@@ -40,13 +41,15 @@
       read-file-name-completion-ignore-case t ; Ignore case in file name completion
       read-buffer-completion-ignore-case t    ; Ignore case in buffer name completion
       vc-follow-symlinks t                    ; Follow symlinks without confirmation
-      tab-width 2                             ; Set tab width to 2
       size-indication-mode t)                 ; Show file size in mode line
 
-
-(setq-default indent-tabs-mode nil)           ; Use spaces instead of tabs
-
-(recentf-mode 1)                              ; Enable recent files list
+(setq-default
+ indent-tabs-mode nil            ; Use spaces instead of tabs
+ tab-width 2                     ; Set tab width to 2
+ fill-column 80                  ; Set fill column
+ truncate-lines nil              ; Don't truncate lines
+ word-wrap t                     ; Wrap at word boundaries
+ sentence-end-double-space nil)  ; Single space after sentences
 
 ;; UI Tweaks
 (menu-bar-mode -1)
@@ -56,14 +59,16 @@
 (column-number-mode 1)
 
 ;; Behavior
-(global-visual-line-mode 1)                  ; Soft-wrap lines
-(global-auto-revert-mode 1)                  ; Auto-refresh changed files
-(savehist-mode 1)                            ; Save minibuffer history
+(global-visual-line-mode 1)     ; Soft-wrap lines
+(global-auto-revert-mode 1)     ; Auto-refresh changed files
+(savehist-mode 1)               ; Save minibuffer history
+(recentf-mode 1)                ; Recent files
+(delete-selection-mode 1)       ; Replace selection when typin
 
 ;; Parentheses
-(show-paren-mode 1)                          ; Highlight matching parentheses
+(show-paren-mode 1)             ; Highlight matching parentheses
 (setq show-paren-delay 0)
-(electric-pair-mode 1)                       ; Auto-insert closing delimiters
+(electric-pair-mode 1)          ; Auto-insert closing delimiters
 
 ;; Line Numbers
 (setq display-line-numbers-type 'relative)  ; Relative line numbers
@@ -92,7 +97,7 @@
                indentation indentation::tab indentation::space
                space-before-tab space-before-tab::tab space-before-tab::space
                space-after-tab space-after-tab::tab space-after-tab::space
-               trailing lines lines-tail
+               trailing lines-tail
                missing-newline-at-eof))
 
   (setq whitespace-display-mappings
@@ -124,11 +129,16 @@
 
 ;; Vertico
 (use-package vertico
-  :init
-  (vertico-mode)
+  :demand t
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-f" . vertico-exit))
   :config
+  (vertico-mode)
   (setq vertico-cycle t
-        vertico-resize nil))
+        vertico-resize nil
+        vertico-count 15))
 
 ;; Marginalia
 (use-package marginalia
@@ -138,23 +148,22 @@
 ;; Orderless
 (use-package orderless
   :config
-  (setq completion-styles '(orderless basic)))
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; Consult
 (use-package consult)
 
 ;; Embark
 (use-package embark
-  :bind
-  (("C-." . embark-act)
-   ("M-." . embark-dwim)
-   ("C-h B" . embark-bindings))
-  :init
+  :bind (("C-." . embark-act)
+         ("M-." . embark-dwim)
+         ("C-h B" . embark-bindings))
+  :config
   (setq prefix-help-command #'embark-prefix-help-command))
 
 (use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Avy
 (use-package avy
@@ -176,13 +185,19 @@
 
 ;; Company
 (use-package company
-  :init
-  (global-company-mode 1)
+  :hook (after-init . global-company-mode)
+  :bind (:map company-active-map
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              ("C-f" . company-complete-selection))
   :config
-(setq company-idle-delay 0.2
-      company-minimum-prefix-length 1
-      company-tooltip-align-annotations t
-      company-selection-wrap-around t))
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 1
+        company-tooltip-align-annotations t
+        company-selection-wrap-around t
+        company-show-numbers t
+        company-backends '((company-capf company-dabbrev-code company-keywords)
+                          company-dabbrev)))
 
 ;; Move-text
 (use-package move-text
@@ -195,8 +210,9 @@
 (use-package markdown-mode
   :mode (("\\.md\\'" . gfm-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init
-  (setq markdown-command "pandoc"))
+  :config
+  (setq markdown-command "pandoc"
+        markdown-fontify-code-blocks-natively t))
 
 ;; Multiple cursor
 ;; Read docs https://github.com/magnars/multiple-cursors.el
@@ -210,25 +226,26 @@
 
 ;; Colorful-mode
 (use-package colorful-mode
-  :custom
-  (colorful-use-prefix t)
-  (colorful-only-strings 'only-prog)
-  (css-fontify-colors nil)
+  :hook prog-mode
   :config
-  (global-colorful-mode t))
+  (setq colorful-use-prefix t
+        colorful-only-strings 'only-prog
+        css-fontify-color nil
+        global-colorful-mode t))
 
 ;; Vterm
 (use-package vterm
+  :bind ("C-c t" . my/vterm-here)
   :config
-  (setq vterm-max-scrollback 100000)
-  :bind ("C-c t" . user/vterm-here))
+  (setq vterm-max-scrollback 10000
+        vterm-kill-buffer-on-exit t))
 
-(defun user/vterm-here ()
+(defun my/vterm-here ()
   "Open vterm in the current buffer's directory."
   (interactive)
-  (let ((default-directory (or (and (buffer-file-name)
-                                    (file-name-directory (buffer-file-name)))
-                               default-directory)))
+  (let ((default-directory (if (buffer-file-name)
+                               (file-name-directory (buffer-file-name))
+                             default-directory)))
     (vterm)))
 
 ;; Yasnippet
@@ -278,9 +295,9 @@
 ;; Org-modern for better visual appearance
 (use-package org-modern
   :after org
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
   :config
-  (global-org-modern-mode)
-  ;; Optional customizations to match your theme
   (setq org-modern-keyword nil
         org-modern-checkbox nil
         org-modern-table nil))

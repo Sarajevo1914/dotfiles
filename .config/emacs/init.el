@@ -35,9 +35,11 @@
       vc-follow-symlinks t                    ; Follow symlinks without confirmation
       tab-width 2                             ; Set tab width to 2
       size-indication-mode t                  ; Show file size in mode line
-      global-recentf-mode t)                  ; Enable recent files list
+)
 
 (setq-default indent-tabs-mode nil)           ; Use spaces instead of tabs
+
+(recentf-mode 1)                              ; Enable recent files list
 
 ;; UI Tweaks
 (menu-bar-mode -1)
@@ -77,41 +79,41 @@
 ;; TODO is not done yet
 ;; GPT say is better put inside of use-package so...
 (use-package whitespace
-  :init
+  :config
   (setq whitespace-style
         '(face tabs tab-mark
                indentation indentation::tab indentation::space
                space-before-tab space-before-tab::tab space-before-tab::space
                space-after-tab space-after-tab::tab space-after-tab::space
-               trailing line lines-tail
+               trailing lines lines-tail
                missing-newline-at-eof))
 
   (setq whitespace-display-mappings
         '((space-mark ?\xA0 [?⍽])
           (tab-mark   ?\t  [?» ?\t])))
 
-  :hook ((prog-mode . whitespace-mode)
-         (text-mode . whitespace-mode))
-
-  :config
+  ;; Custom face for whitespace
   (set-face-attribute 'whitespace-tab nil
-    :foreground "#fb4933" :background "#3c3836")
+                      :foreground "#fb4933" :background "#3c3836")
 
-  ;(set-face-attribute 'whitespace-space nil
-   ; :foreground "#fabd2f" :background "#3c3836")
-  )
+  :hook ((prog-mode . whitespace-mode)
+         (text-mode . whitespace-mode)))
 
+;; Function to delete trailing whitespace on save
 (defun user/delete-trailing-whitespace-on-save ()
+  "Add hook to delete trailing whitespace before saving."
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 
 (add-hook 'prog-mode-hook #'user/delete-trailing-whitespace-on-save)
 (add-hook 'text-mode-hook #'user/delete-trailing-whitespace-on-save)
 
 ;; Dired
-(add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto refresh if dir chage
+(add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto refresh if dir changes
 
 ;; Which-key
-(which-key-mode 1)
+(use-package which-key
+  :config
+  (which-key-mode 1))
 
 ;; Vertico
 (use-package vertico
@@ -143,10 +145,14 @@
   :init
   (setq prefix-help-command #'embark-prefix-help-command))
 
-(use-package embark-consult)
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Wgrep
-(use-package wgrep)
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
 
 ;; Magit
 (use-package magit
@@ -169,25 +175,26 @@
 ;; Move-text
 (use-package move-text
   :config
-  (move-text-default-bindings)) ; M-up / M-down
-(global-set-key (kbd "M-p") 'move-text-up)
-(global-set-key (kbd "M-n") 'move-text-down)
+  (move-text-default-bindings) ; M-up / M-down
+  :bind (("M-p" . move-text-up)
+         ("M-n" . move-text-down)))
 
 ;; Markdown
 (use-package markdown-mode
-  :mode (("\\.md\\'" . gfm-mode))
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :init
   (setq markdown-command "pandoc"))
 
 ;; Multiple cursor
 ;; Read docs https://github.com/magnars/multiple-cursors.el
-(use-package multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->")         'mc/mark-next-like-this)
-(global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-(global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
-(global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-\""        . mc/skip-to-next-like-this)
+         ("C-:"         . mc/skip-to-previous-like-this)))
 
 ;; Colorful-mode
 (use-package colorful-mode
@@ -201,7 +208,8 @@
 ;; Vterm
 (use-package vterm
   :config
-  (setq vterm-max-scrollback 100000))
+  (setq vterm-max-scrollback 100000)
+  :bind ("C-c t" . user/vterm-here))
 
 (defun user/vterm-here ()
   "Open vterm in the current buffer's directory."
@@ -211,5 +219,48 @@
                                default-directory)))
     (vterm)))
 
-(global-set-key (kbd "C-c t") 'user/vterm-here)
-;(global-set-key (kbd "C-t") 'vterm-toggle)
+;; Org config
+(use-package org
+  :config
+  ;; Basic org settings
+  (setq org-startup-indented t
+        org-pretty-entities t
+        org-hide-emphasis-markers t
+        org-startup-with-inline-images t
+        org-image-actual-width '(300)
+        org-log-done 'time
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t
+        org-confirm-babel-evaluate nil
+        org-edit-src-content-indentation 0)
+
+  ;; Enable some babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t)
+     (org . t)))
+
+  ;; Keybindings
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)))
+
+;; Org-modern for better visual appearance
+(use-package org-modern
+  :after org
+  :config
+  (global-org-modern-mode)
+  ;; Optional customizations to match your theme
+  (setq org-modern-keyword nil
+        org-modern-checkbox nil
+        org-modern-table nil))
+
+;; Org-auto-tangle for automatic tangling
+(use-package org-auto-tangle
+  :after org
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  ;; Set to nil so it only tangles files with #+auto_tangle: t
+  (setq org-auto-tangle-default nil))

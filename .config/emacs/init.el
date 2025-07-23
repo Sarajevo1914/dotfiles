@@ -16,6 +16,13 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; Disable native compilation during rebuilds
+(when (boundp 'native-comp-deferred-compilation)
+  (setq native-comp-deferred-compilation nil
+        native-comp-jit-compilation nil
+        comp-async-report-warnings-errors nil
+        comp-async-jobs-number 1))
+
 ;; Install use-package and enable for straight
 (straight-use-package 'use-package)
 (require 'use-package)
@@ -34,8 +41,8 @@
       read-buffer-completion-ignore-case t    ; Ignore case in buffer name completion
       vc-follow-symlinks t                    ; Follow symlinks without confirmation
       tab-width 2                             ; Set tab width to 2
-      size-indication-mode t                  ; Show file size in mode line
-)
+      size-indication-mode t)                 ; Show file size in mode line
+
 
 (setq-default indent-tabs-mode nil)           ; Use spaces instead of tabs
 
@@ -131,7 +138,7 @@
 ;; Orderless
 (use-package orderless
   :config
-  (setq completion-styles '(orderless)))
+  (setq completion-styles '(orderless basic)))
 
 ;; Consult
 (use-package consult)
@@ -148,6 +155,11 @@
 (use-package embark-consult
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+;; Avy
+(use-package avy
+  :bind (("C-'" . avy-goto-char)
+         ("C-c j" . avy-goto-line)))
 
 ;; Wgrep
 (use-package wgrep
@@ -218,6 +230,22 @@
                                     (file-name-directory (buffer-file-name)))
                                default-directory)))
     (vterm)))
+
+;; Yasnippet
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets")) ; Custom snippets directory
+  (setq yas-prompt-functions '(yas-dropdown-prompt yas-completing-prompt))
+  (setq yas-wrap-around-region t) ; Allow wrapping text with snippets
+  (setq yas-triggers-in-field t)) ; Don't ask before expanding snippets
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package rfc-mode
+  :config
+  (setq rfc-mode-directory (expand-file-name "~/.rfc/")))
 
 ;; Org config
 (use-package org

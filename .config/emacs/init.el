@@ -122,6 +122,18 @@
 ;; Dired
 (add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto refresh if dir changes
 
+;; Tree-sitter
+;; Arch instala las gramáticas en /usr/lib
+(setq treesit-extra-load-path '("/usr/lib"))
+
+;; Usar los modos -ts por defecto
+(setq major-mode-remap-alist
+      '((bash-mode . bash-ts-mode)
+        (python-mode . python-ts-mode)
+        (c-mode . c-ts-mode)
+        (json-mode . json-ts-mode)
+        (javascript-mode . js-ts-mode)))
+
 ;; Which-key
 (use-package which-key
   :config

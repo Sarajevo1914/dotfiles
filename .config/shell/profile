@@ -9,7 +9,9 @@ unsetopt PROMPT_SP 2>/dev/null
 # Profile file, runs on login. Environmental variables are set here.
 
 # Add all directories in `~/.local/bin` to $PATH
-export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
+local_bins="$(find ~/.local/bin -type d | paste -sd ':' -)"
+export PATH="$PATH:$local_bins"
+
 export PATH="$HOME/.config/emacs/bin:$PATH"
 
 # Default programs:
@@ -37,9 +39,6 @@ export MANROFFOPT="-c"
 
 # ssh keys archlinux wiki
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
-# adding to Path
-export PATH=/sbin/marksman:$PATH
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -74,28 +73,16 @@ export ELECTRUMDIR="$XDG_DATA_HOME/electrum"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 export RENPY_PATH_TO_SAVES="$XDG_DATA_HOME"
-export EMACSINIT=$HOME/.config/emacs/init.el
-export NPM_CONFIG_INIT_MODULE="XDG_CONFIG_HOME"/npm/config/npm-init.js
-export NPM_CONFIG_CACHE="XDG_CACHE_HOME"/npm
-export NPM_CONFIG_TMP="XDG_RUNTME_DIR"/npm
-
-[ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1
-
-# Set platform theme for Qt5 and Qt6
-
-#export QT_QPA_PLATFORMTHEME=qt5ct
-#export QT_QPA_PLATFORMTHEME=qt6ct
-
+export EMACSINIT="$HOME/.config/emacs/init.el"
+export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME/npm/config/npm-init.js"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR/npm"
 #export QT_QPA_PLATFORMTHEME=qt5ct:qt6ct
-
 export QT_QPA_PLATFORMTHEME=qt5ct
 export QT6_QPA_PLATFORMTHEME=qt6ct
 
-#if [ "$(qmake --version 2>/dev/null | grep 'Qt 6')" ]; then
-#    export QT_QPA_PLATFORMTHEME=qt6ct
-#else
-#    export QT_QPA_PLATFORMTHEME=qt5ct
-#fi
-
 # this work?
-export XCURSOR_PATH=${XCURSOR_PATH}:~/.local/share/icons
+
+export XCURSOR_PATH="${XCURSOR_PATH}":~/.local/share/icons
+
+[ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1

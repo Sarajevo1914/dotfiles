@@ -10,50 +10,50 @@
 
 # Verbosity and settings that you pretty much just always are going to want
 alias \
-	mv="mv -iv" \
-	rm="rm -vI" \
-	bc="bc -ql" \
-	rsync="rsync -vrPlu" \
-	mkd="mkdir -pv" \
-	yt="yt-dlp --embed-metadata -i" \
-	yta="yt -x -f bestaudio/best" \
-	ytt="yt --skip-download --write-thumbnail" \
-	ffmpeg="ffmpeg -hide_banner"	\
-	tfan-auto="echo level auto | sudo tee /proc/acpi/ibm/fan"	\
-	tfan-7="echo level 7 | sudo tee /proc/acpi/ibm/fan" 	\
-	tfan-full="echo level disengaged | sudo tee /proc/acpi/ibm/fan"	\
-	reflector_update='sudo reflector -f 30 -l 30 -a 6 --sort rate --verbose --save /etc/pacman.d/mirrorlist'	\
+ mv="mv -iv" \
+ rm="rm -vI" \
+ bc="bc -ql" \
+ rsync="rsync -vrPlu" \
+ mkd="mkdir -pv" \
+ yt="yt-dlp --embed-metadata -i" \
+ yta="yt -x -f bestaudio/best" \
+ ytt="yt --skip-download --write-thumbnail" \
+ ffmpeg="ffmpeg -hide_banner" \
+ tfan-auto='echo level auto | sudo tee /proc/acpi/ibm/fan' \
+ tfan-7='echo level 7 | sudo tee /proc/acpi/ibm/fan'  \
+ tfan-full='echo level disengaged | sudo tee /proc/acpi/ibm/fan' \
+ reflector_update='sudo reflector -f 30 -l 30 -a 6 --sort rate --verbose --save /etc/pacman.d/mirrorlist'
 
 # eza
 alias \
-	ls='eza --group-directories-first --icons'	\
-	lsl='eza --group-directories-first --icons -l'	\
-	lsla='eza --group-directories-first --icons -la'	\
-	ll='eza -labg --group-directories-first --total-size --time-style long-iso --icons'	\
-	llb='eza -labg --group-directories-first --total-size --time-style long-iso --icons -B'	\
-	lls='eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons'	\
-	llsb='eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons -B'	\
+ ls="eza --group-directories-first --icons" \
+ lsl="eza --group-directories-first --icons -l" \
+ lsla="eza --group-directories-first --icons -la" \
+ ll="eza -labg --group-directories-first --total-size --time-style long-iso --icons" \
+ llb="eza -labg --group-directories-first --total-size --time-style long-iso --icons -B" \
+ lls="eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons" \
+ llsb="eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons -B"
 
 # These common commands are just too long! Abbreviate them
 alias \
-	ns="nsxiv-rifle"	\
-	powersave="sudo cpupower frequency-set -g powersave"	\
-	performance="sudo cpupower frequency-set -g performance"	\
-	hx="helix"	\
-	z="zoxide"	\
-	cp="cp -iv"	\
-	..="cd .."	\
-	...="cd ../.."	\
-	....="cd ../../.."	\
-	myip="curl ipinfo.io/ip"
+ ns="nsxiv-rifle" \
+ powersave="sudo cpupower frequency-set -g powersave" \
+ performance="sudo cpupower frequency-set -g performance" \
+ hx="helix" \
+ z="zoxide" \
+ cp="cp -iv" \
+ ..="cd .." \
+ ...="cd ../.." \
+ ....="cd ../../.." \
+ myip="curl ipinfo.io/ip"
 
-	# Safety Nets
-	alias \
-		rmdir="rmdir --ignore-fail-on-non-empty"	\
+# Safety Nets
+alias \
+ rmdir="rmdir --ignore-fail-on-non-empty"
 
 # Colorize commands when possible
 alias \
-	grep="grep --color=auto"	\
-	diff="diff --color=auto"	\
-	ccat="highlight --out-format=ansi"	\
-	ip="ip -color=auto"	\
+ grep="grep --color=auto" \
+ diff="diff --color=auto" \
+ ccat="highlight --out-format=ansi" \
+ ip="ip -color=auto"

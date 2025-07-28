@@ -129,13 +129,14 @@ write_config "$HOME/.config/environment.d/cursor.conf" \
 XCURSOR_SIZE=24"
 
 # .Xresources for X11
-write_config "$HOME/.Xresources" \
+CURSOR_XRES="$HOME/.Xresources.cursor"
+write_config "$CURSOR_XRES" \
 "Xcursor.theme: $CURSOR_THEME
 Xcursor.size: 24"
 
 if command -v xrdb &>/dev/null; then
-    xrdb -merge "$HOME/.Xresources"
-    $VERBOSE && echo "Reloaded .Xresources"
+    xrdb -merge "$CURSOR_XRES"
+    $VERBOSE && echo "Reloaded $CURSOR_XRES"
 fi
 
 # Color-scheme for Firefox / Portals

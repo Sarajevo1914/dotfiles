@@ -25,7 +25,7 @@ QT_LIGHT_THEME="Adwaita"
 QT_DARK_THEME="Adwaita-Dark"
 ICON_LIGHT="ePapirus"
 ICON_DARK="ePapirus-Dark"
-CURSOR_THEME="Openzone Ice Slim"
+CURSOR_THEME="Openzone_Ice_Slim"
 FONT_NAME="Cantarell"
 FONT_SIZE="12"
 EOL
@@ -79,7 +79,7 @@ write_config() {
 }
 
 # Apply GTK2 configuration
-write_config "$HOME/.config/gtk-2.0/gtkrc-2.0" \
+write_config "$HOME/.gtkrc-2.0" \
 "gtk-theme-name=\"$GTK_THEME\"
 gtk-icon-theme-name=\"$ICON_THEME\"
 gtk-cursor-theme-name=\"$CURSOR_THEME\"

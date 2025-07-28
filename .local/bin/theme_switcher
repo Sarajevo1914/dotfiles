@@ -1,21 +1,13 @@
 #!/bin/bash
 
-# WIP
-# TODO
-# Cursor theme don't work very well on QT, Electron apps, java apps and others
-# IA GPT and Mistral suggest to to export var to xinitrc xprofile and Xresources, find a way to add
-# changes data without modify existent content
-
 CONFIG_FILE="$HOME/.config/theme_switcher.conf"
 LOG_FILE="$HOME/theme_switcher.log"
 VERBOSE=false
 ERROR_OCCURRED=false
 
-# Enable error handling
 set -e  # Exit on error
 set -u  # Treat unset variables as errors
 
-# Create config file if it does not exist
 if [[ ! -f "$CONFIG_FILE" ]]; then
     cat > "$CONFIG_FILE" <<EOL
 # Theme Configuration
@@ -33,37 +25,38 @@ EOL
     exit 0
 fi
 
-# Source the config file
 source "$CONFIG_FILE"
 
 # Parse options
-if [[ "$1" == "-v" ]]; then
+if [[ $# -ge 1 && "$1" == "-v" ]]; then
     VERBOSE=true
-    shift  # Remove -v from arguments
+    shift
 fi
 
 # Check the current mode
-if [[ "$#" -ne 1 ]]; then
+if [[ $# -ne 1 ]]; then
     echo "Error: Incorrect usage. Expected 'light' or 'dark'."
     exit 1
 fi
 
-if [[ "$1" == "light" ]]; then
+MODE="$1"
+if [[ "$MODE" == "light" ]]; then
     GTK_THEME="$GTK_LIGHT_THEME"
     QT_THEME="$QT_LIGHT_THEME"
     ICON_THEME="$ICON_LIGHT"
-elif [[ "$1" == "dark" ]]; then
+    COLOR_SCHEME="default"
+elif [[ "$MODE" == "dark" ]]; then
     GTK_THEME="$GTK_DARK_THEME"
     QT_THEME="$QT_DARK_THEME"
     ICON_THEME="$ICON_DARK"
+    COLOR_SCHEME="prefer-dark"
 else
-    echo "Error: Invalid argument '$1'. Use 'light' or 'dark'."
+    echo "Error: Invalid argument '$MODE'. Use 'light' or 'dark'."
     exit 1
 fi
 
-$VERBOSE && echo "Applying theme: GTK=$GTK_THEME, Qt=$QT_THEME, Icons=$ICON_THEME, Cursor=$CURSOR_THEME"
+$VERBOSE && echo "Applying theme: GTK=$GTK_THEME, Qt=$QT_THEME, Icons=$ICON_THEME, Cursor=$CURSOR_THEME, Color-Scheme=$COLOR_SCHEME"
 
-# Function to write config safely
 write_config() {
     local file="$1"
     local content="$2"
@@ -78,14 +71,14 @@ write_config() {
     fi
 }
 
-# Apply GTK2 configuration
+# GTK 2
 write_config "$HOME/.gtkrc-2.0" \
 "gtk-theme-name=\"$GTK_THEME\"
 gtk-icon-theme-name=\"$ICON_THEME\"
 gtk-cursor-theme-name=\"$CURSOR_THEME\"
 gtk-font-name=\"$FONT_NAME $FONT_SIZE\""
 
-# Apply GTK3 configuration
+# GTK 3
 write_config "$HOME/.config/gtk-3.0/settings.ini" \
 "[Settings]
 gtk-theme-name=$GTK_THEME
@@ -93,7 +86,7 @@ gtk-icon-theme-name=$ICON_THEME
 gtk-cursor-theme-name=$CURSOR_THEME
 gtk-cursor-theme-size=24"
 
-# Apply GTK4 configuration
+# GTK 4
 write_config "$HOME/.config/gtk-4.0/settings.ini" \
 "[Settings]
 gtk-theme-name=$GTK_THEME
@@ -101,82 +94,61 @@ gtk-icon-theme-name=$ICON_THEME
 gtk-cursor-theme-name=$CURSOR_THEME
 gtk-cursor-theme-size=24"
 
-# Apply Qt configurations
+# Qt5
 write_config "$HOME/.config/qt5ct/qt5ct.conf" \
 "[Appearance]
 style=$QT_THEME
 icon_theme=$ICON_THEME
 cursor_theme=$CURSOR_THEME"
 
+# Qt6
 write_config "$HOME/.config/qt6ct/qt6ct.conf" \
 "[Appearance]
 style=$QT_THEME
 icon_theme=$ICON_THEME
 cursor_theme=$CURSOR_THEME"
 
-# Apply font configuration
+# Font (fontconfig)
 write_config "$HOME/.config/fontconfig/fonts.conf" \
 "<?xml version='1.0'?>
 <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
 <fontconfig>
-    <match target='pattern'>
-        <test qual='any' name='family'><string>$FONT_NAME</string></test>
-        <edit name='size' mode='assign'><double>$FONT_SIZE</double></edit>
-    </match>
+  <match target='pattern'>
+    <test qual='any' name='family'><string>$FONT_NAME</string></test>
+    <edit name='size' mode='assign'><double>$FONT_SIZE</double></edit>
+  </match>
 </fontconfig>"
 
-# Apply cursor globally
+# Cursor X11 / Wayland
 write_config "$HOME/.icons/default/index.theme" \
 "[Icon Theme]
 Inherits=$CURSOR_THEME"
 
-write_config "$HOME/.local/share/icons/default/index.theme" \
-"[Icon Theme]
-Inherits=$CURSOR_THEME"
-
-# Export cursor variables
-export XCURSOR_THEME="$CURSOR_THEME"
-export XCURSOR_SIZE=24
-export GTK_CursorThemeName="$CURSOR_THEME"
-export QT_QPA_PLATFORMTHEME="qt5ct"
-
-# Reload configuration for X11
-if command -v xrdb &>/dev/null; then
-    if xrdb -merge ~/.Xresources; then
-        $VERBOSE && echo "Reloaded Xresources"
-    else
-        echo "Warning: Failed to reload Xresources" | tee -a "$LOG_FILE"
-        ERROR_OCCURRED=true
-    fi
-fi
-
-if command -v pkill &>/dev/null; then
-    pkill -USR1 -x xfsettingsd 2>/dev/null || { $VERBOSE && echo "Warning: xfsettingsd not running"; }
-    pkill -USR1 -x lxappearance 2>/dev/null || { $VERBOSE && echo "Warning: lxappearance not running"; }
-fi
-
-# Ensure cursor settings persist across Wayland sessions
 write_config "$HOME/.config/environment.d/cursor.conf" \
 "XCURSOR_THEME=$CURSOR_THEME
 XCURSOR_SIZE=24"
 
-# Reload configuration for Wayland
-if command -v gsettings &>/dev/null; then
-    if ! gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME"; then
-        echo "Warning: gsettings failed for gtk-theme" | tee -a "$LOG_FILE"
-        ERROR_OCCURRED=true
-    fi
-    if ! gsettings set org.gnome.desktop.interface icon-theme "$ICON_THEME"; then
-        echo "Warning: gsettings failed for icon-theme" | tee -a "$LOG_FILE"
-        ERROR_OCCURRED=true
-    fi
-    if ! gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR_THEME"; then
-        echo "Warning: gsettings failed for cursor-theme" | tee -a "$LOG_FILE"
-        ERROR_OCCURRED=true
-    fi
+# .Xresources for X11
+write_config "$HOME/.Xresources" \
+"Xcursor.theme: $CURSOR_THEME
+Xcursor.size: 24"
+
+if command -v xrdb &>/dev/null; then
+    xrdb -merge "$HOME/.Xresources"
+    $VERBOSE && echo "Reloaded .Xresources"
 fi
 
-# Remove log file if no errors occurred
+# Color-scheme for Firefox / Portals
+if command -v gsettings &>/dev/null; then
+    gsettings set org.gnome.desktop.interface color-scheme "$COLOR_SCHEME" || {
+        echo "Warning: gsettings failed to set color-scheme" | tee -a "$LOG_FILE"
+        ERROR_OCCURRED=true
+    }
+fi
+
+systemctl --user restart xdg-desktop-portal.service
+systemctl --user restart xdg-desktop-portal-gtk.service
+
 if ! $ERROR_OCCURRED; then
     rm -f "$LOG_FILE"
 fi

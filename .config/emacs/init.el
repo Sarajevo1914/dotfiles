@@ -68,6 +68,7 @@
 ;; Parentheses
 (show-paren-mode 1)             ; Highlight matching parentheses
 (setq show-paren-delay 0)
+(setq show-paren-style 'mixed)
 (electric-pair-mode 1)          ; Auto-insert closing delimiters
 
 ;; Line Numbers
@@ -133,6 +134,12 @@
         (c-mode . c-ts-mode)
         (json-mode . json-ts-mode)
         (javascript-mode . js-ts-mode)))
+
+;; Undo-tree
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode))
+
 
 ;; Which-key
 (use-package which-key

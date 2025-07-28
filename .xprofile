@@ -7,7 +7,7 @@ if [ -f ~/.xinitrc ]; then
     source ~/.xinitrc
 fi
 
+/usr/lib/xdg-desktop-portal-gtk &
 
-# testing 
-export XCURSOR_THEME=$CURSOR_THEME
-export XCURSOR_SIZE=24
+XDG_CURRENT_DESKTOP=GNOME /usr/lib/xdg-desktop-portal &
+

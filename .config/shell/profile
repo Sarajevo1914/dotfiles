@@ -1,28 +1,29 @@
 #!/bin/sh
 
-# idk what this do?
-# [[ -f ~/.bashrc ]] && . ~/.bashrc
-
-# also this from luke
+# ZSH-specific setup (omit or adjust for other shells)
 unsetopt PROMPT_SP 2>/dev/null
 
-# Profile file, runs on login. Environmental variables are set here.
+# Start dbus session if not already running
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+fi
 
-# Add all directories in `~/.local/bin` to $PATH
-local_bins="$(find ~/.local/bin -type d | paste -sd ':' -)"
-export PATH="$PATH:$local_bins"
+# Add ~/.local/bin and subdirs to PATH
+local_bins="$(find "$HOME/.local/bin" -type d | paste -sd ':' -)"
+export PATH="$PATH:$local_bins:$HOME/.config/emacs/bin"
 
-export PATH="$HOME/.config/emacs/bin:$PATH"
-
-# Default programs:
+# Default programs
 export EDITOR="nvim"
 export TERMINAL="kitty"
 export TERMINAL_PROG="kitty"
 export BROWSER="firefox"
 
+# Firefox
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
   export MOZ_ENABLE_WAYLAND=1
 fi
+
+export XDG_CURRENT_DESKTOP=GNOME
 
 # Man pager
 
@@ -40,23 +41,27 @@ export MANROFFOPT="-c"
 # ssh keys archlinux wiki
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
-# ~/ Clean-up:
+# XDG Base Directory spec
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
-# export XCURSOR_PATH="/usr/share/icons:$XDG_DATA_HOME/icons"
+
+# Personal folder overrides
 export XDG_DOWNLOAD_DIR="$HOME/dl"
 export XDG_DOCUMENTS_DIR="$HOME/docs"
 export XDG_PICTURES_DIR="$HOME/pics"
+
+# ~/ Clean-up:
 #export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
 #export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
+#export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch-config"
-export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc-2.0"
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-#export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export KODI_DATA="$XDG_DATA_HOME/kodi"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
@@ -77,12 +82,14 @@ export EMACSINIT="$HOME/.config/emacs/init.el"
 export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME/npm/config/npm-init.js"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR/npm"
+
+
 #export QT_QPA_PLATFORMTHEME=qt5ct:qt6ct
 export QT_QPA_PLATFORMTHEME=qt5ct
 export QT6_QPA_PLATFORMTHEME=qt6ct
 
-# this work?
+# Xcursor
+export XCURSOR_PATH="$XDG_DATA_HOME/icons:$HOME/.icons:/usr/share/icons:/usr/local/share/icons"
 
-export XCURSOR_PATH="${XCURSOR_PATH}":~/.local/share/icons
 
 [ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1

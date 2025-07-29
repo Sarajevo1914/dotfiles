@@ -7,6 +7,4 @@ xset -dpms
 xset dpms 0 0 0
 xset s off
 
-# testing 
-export XCURSOR_THEME=$CURSOR_THEME
-export XCURSOR_SIZE=24
+

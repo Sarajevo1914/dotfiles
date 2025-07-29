@@ -3,11 +3,15 @@
 # Ensure that xrdb has finished running before moving on to start the WM/DE.
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
 
+# Source .Xresources files
+xrdb -merge "$HOME/.Xresources"
+xrdb -merge "$HOME/.Xresources.cursor"
+
+# Source .xinitrc
 if [ -f ~/.xinitrc ]; then
     source ~/.xinitrc
 fi
 
-/usr/lib/xdg-desktop-portal-gtk &
-
-XDG_CURRENT_DESKTOP=GNOME /usr/lib/xdg-desktop-portal &
-
+# Start Portals
+pgrep -xu "$USER" xdg-desktop-portal >/dev/null 2>&1 || /usr/lib/xdg-desktop-portal &
+pgrep -xu "$USER" xdg-desktop-portal-gtk >/dev/null 2>&1 || /usr/lib/xdg-desktop-portal-gtk &

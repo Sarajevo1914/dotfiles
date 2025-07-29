@@ -4,7 +4,7 @@
 
 Small script for change between dark and light theme that works for X11 and Waylan session.
 
-The first time you run will create the config file and exit, telling you to edit `~/.config/theme_switcher.conf` and after that run again
+The first time you run will create the config file and exit, telling you to edit `~/.config/theme_switcher.conf` and after that run again.
 The default config file have my settings i still use since i start using linux (Materia theme, Papirus icon, etc.) you can use my setting or change for your preferences
 
 **Syntax**
@@ -14,6 +14,13 @@ The default config file have my settings i still use since i start using linux (
 
 **Required Package for Arch Linux**
 
-```
-xorg-xrdb qt5ct qt6ct qt5-base qt6-base fontconfig gsettings-desktop-schemas
+```shell
+xorg-xrdb qt5ct qt6ct qt5-base qt6-base fontconfig gsettings-desktop-schemas dconf xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
 ````
+
+you need to have some daemons running for change theme in firefox and others...
+
+```shell
+systemctl --user enable --now xdg-desktop-portal.service
+systemctl --user enable --now xdg-desktop-portal-gtk.service
+```

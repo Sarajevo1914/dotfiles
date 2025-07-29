@@ -5,6 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Disable \n after prompt (for custom prompt)
+if [[ $- == *i* ]]; then
+  unsetopt PROMPT_SP 2>/dev/null
+fi
 
 # new zsh config because the old one is a mess, i dont undestando because is
 # just a copy-pasta from luke and random sites

@@ -55,7 +55,9 @@ else
     exit 1
 fi
 
-$VERBOSE && echo "Applying theme: GTK=$GTK_THEME, Qt=$QT_THEME, Icons=$ICON_THEME, Cursor=$CURSOR_THEME, Color-Scheme=$COLOR_SCHEME"
+if [[ "$VERBOSE" == true ]]; then
+    echo "Applying theme: GTK=$GTK_THEME, Qt=$QT_THEME, Icons=$ICON_THEME, Cursor=$CURSOR_THEME, Color-Scheme=$COLOR_SCHEME"
+fi
 
 write_config() {
     local file="$1"
@@ -64,7 +66,9 @@ write_config() {
     mkdir -p "$(dirname "$file")"
     echo "$content" > "$file"
     if [[ $? -eq 0 ]]; then
-        $VERBOSE && echo "Updated: $file"
+        if [[ "$VERBOSE" == true ]]; then
+            echo "Updated: $file"
+        fi
     else
         echo "Error: Failed to write to $file" | tee -a "$LOG_FILE"
         ERROR_OCCURRED=true
@@ -136,7 +140,9 @@ Xcursor.size: 24"
 
 if command -v xrdb &>/dev/null; then
     xrdb -merge "$CURSOR_XRES"
-    $VERBOSE && echo "Reloaded $CURSOR_XRES"
+    if [[ "$VERBOSE" == true ]]; then
+        echo "Reloaded $CURSOR_XRES"
+    fi
 fi
 
 # Color-scheme for Firefox / Portals

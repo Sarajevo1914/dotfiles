@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# ZSH-specific setup (omit or adjust for other shells)
-unsetopt PROMPT_SP 2>/dev/null
-
 # Start dbus session if not already running
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then
   export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"

@@ -53,19 +53,22 @@
                (expand-file-name "eln-cache/" user-emacs-directory)))
 
 ;; General Settings
-(setq inhibit-startup-message t               ; Disable splash screen
-      initial-scratch-message nil             ; Empty scratch buffer
-      delete-by-moving-to-trash t             ; Use system trash on delete
-      make-backup-files t                     ; Enable backups
-      backup-by-copying t                     ; Copy files for backup (safer for symlinks)
-      require-final-newline t                 ; Add newline at end of file on save
-      load-prefer-newer t                     ; Prefer newer versions of files
-      apropos-do-all t                        ; Show all results in apropos
-      mouse-yank-at-point t                   ; Yank at point, not click location
-      read-file-name-completion-ignore-case t ; Ignore case in file name completion
-      read-buffer-completion-ignore-case t    ; Ignore case in buffer name completion
-      vc-follow-symlinks t                    ; Follow symlinks without confirmation
-      size-indication-mode t)                 ; Show file size in mode line
+(setq inhibit-startup-message t                        ; Disable splash screen
+      initial-scratch-message nil                      ; Empty scratch buffer
+      delete-by-moving-to-trash t                      ; Use system trash on delete
+      make-backup-files t                              ; Enable backups
+      backup-by-copying t                              ; Copy files for backup (safer for symlinks)
+      require-final-newline t                          ; Add newline at end of file on save
+      load-prefer-newer t                              ; Prefer newer versions of files
+      apropos-do-all t                                 ; Show all results in apropos
+      mouse-yank-at-point t                            ; Yank at point, not click location
+      read-file-name-completion-ignore-case t          ; Ignore case in file name completion
+      read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
+      vc-follow-symlinks t                             ; Follow symlinks without confirmation
+      size-indication-mode t                           ; Show file size in mode line
+      browse-url-browser-function 'browse-url-firefox) ; Open URL links using firefox
+
+
 
 (setq-default
  indent-tabs-mode nil            ; Use spaces instead of tabs

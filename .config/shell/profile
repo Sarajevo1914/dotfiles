@@ -21,6 +21,9 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
 fi
 
 export XDG_CURRENT_DESKTOP=GNOME
+export MOZ_GTK_TITLEBAR_DECORATION=system
+export GTK_CSD=0
+
 
 # Man pager
 

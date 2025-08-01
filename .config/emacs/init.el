@@ -16,17 +16,41 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Disable native compilation during rebuilds
-(when (boundp 'native-comp-deferred-compilation)
-  (setq native-comp-deferred-compilation nil
-        native-comp-jit-compilation nil
-        comp-async-report-warnings-errors nil
-        comp-async-jobs-number 1))
+(setq straight-use-package-by-default t)
+(setq straight-vc-git-default-clone-depth 1) ; shallow clone
+(setq straight-check-for-modifications '(check-on-save find-when-checking))
 
-;; Install use-package and enable for straight
+;; Disable native-compilation at install time to avoid slowdowns
+(setq straight-disable-native-compile t)
+
 (straight-use-package 'use-package)
 (require 'use-package)
-(setq straight-use-package-by-default t)
+
+(when (and (fboundp 'native-compile)
+           (boundp 'native-comp-deferred-compilation))
+  ;; Enable background compilation AFTER loading packages
+  (setq native-comp-deferred-compilation t)
+  (setq native-comp-jit-compilation t)
+  (setq comp-async-report-warnings-errors nil)
+
+  ;; Dynamically detect CPU count to set job number
+  (when (boundp 'comp-async-jobs-number)
+    (let* ((cpu-count
+            (cond
+             ((executable-find "nproc")
+              (string-to-number
+               (string-trim (shell-command-to-string "nproc"))))
+             ((eq system-type 'darwin)
+              (string-to-number
+               (string-trim (shell-command-to-string "sysctl -n hw.ncpu"))))
+             (t 1)))
+           (jobs (min cpu-count 8))) ; limit max jobs to avoid overheating
+      (setq comp-async-jobs-number (max jobs 1)))))
+
+;; Store .eln files in a custom cache directory
+(when (boundp 'native-comp-eln-load-path)
+  (add-to-list 'native-comp-eln-load-path
+               (expand-file-name "eln-cache/" user-emacs-directory)))
 
 ;; General Settings
 (setq inhibit-startup-message t               ; Disable splash screen
@@ -74,6 +98,14 @@
 ;; Line Numbers
 (setq display-line-numbers-type 'relative)  ; Relative line numbers
 (global-display-line-numbers-mode 1)
+
+;; Load extra config
+(let ((modules-dir (expand-file-name "extra-config" user-emacs-directory)))
+  (when (file-directory-p modules-dir)
+    (dolist (file (directory-files modules-dir t "\\.el$"))
+      (condition-case err
+          (load file)
+        (error (message "Error loading %s: %s" file err))))))
 
 ;; Themes
 (use-package gruber-darker-theme)
@@ -124,10 +156,10 @@
 (add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto refresh if dir changes
 
 ;; Tree-sitter
-;; Arch instala las gramáticas en /usr/lib
+;; Arch install grammars in /usr/lib
 (setq treesit-extra-load-path '("/usr/lib"))
 
-;; Usar los modos -ts por defecto
+;; Use TS by default
 (setq major-mode-remap-alist
       '((bash-mode . bash-ts-mode)
         (python-mode . python-ts-mode)
@@ -250,12 +282,16 @@
 
 ;; Vterm
 (use-package vterm
-  :bind ("C-c t" . my/vterm-here)
+  :bind ("C-c t" . user/vterm-here)
   :config
   (setq vterm-max-scrollback 10000
-        vterm-kill-buffer-on-exit t))
+        vterm-kill-buffer-on-exit t)
 
-(defun my/vterm-here ()
+    (let ((module-path (expand-file-name "vterm/vterm-module" (straight--repos-dir "emacs-libvterm"))))
+    (when (file-exists-p (concat module-path ".so"))
+      (load module-path nil t))))
+
+(defun user/vterm-here ()
   "Open vterm in the current buffer's directory."
   (interactive)
   (let ((default-directory (if (buffer-file-name)
@@ -278,49 +314,3 @@
 (use-package rfc-mode
   :config
   (setq rfc-mode-directory (expand-file-name "~/.rfc/")))
-
-;; Org config
-(use-package org
-  :config
-  ;; Basic org settings
-  (setq org-startup-indented t
-        org-pretty-entities t
-        org-hide-emphasis-markers t
-        org-startup-with-inline-images t
-        org-image-actual-width '(300)
-        org-log-done 'time
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t
-        org-confirm-babel-evaluate nil
-        org-edit-src-content-indentation 0)
-
-  ;; Enable some babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (shell . t)
-     (org . t)))
-
-  ;; Keybindings
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)))
-
-;; Org-modern for better visual appearance
-(use-package org-modern
-  :after org
-  :hook ((org-mode . org-modern-mode)
-         (org-agenda-finalize . org-modern-agenda))
-  :config
-  (setq org-modern-keyword nil
-        org-modern-checkbox nil
-        org-modern-table nil))
-
-;; Org-auto-tangle for automatic tangling
-(use-package org-auto-tangle
-  :after org
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  ;; Set to nil so it only tangles files with #+auto_tangle: t
-  (setq org-auto-tangle-default nil))

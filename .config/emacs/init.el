@@ -287,16 +287,24 @@
   (setq vterm-max-scrollback 10000
         vterm-kill-buffer-on-exit t)
 
-    (let ((module-path (expand-file-name "vterm/vterm-module" (straight--repos-dir "emacs-libvterm"))))
-    (when (file-exists-p (concat module-path ".so"))
+  (let* ((vterm-repo-dir (straight--repos-dir "emacs-libvterm"))
+         (module-path (expand-file-name "vterm/vterm-module.so" vterm-repo-dir)))
+    (unless (file-exists-p module-path)
+      (message "Compiling vterm-module...")
+      (let ((default-directory vterm-repo-dir))
+        (when (and (file-exists-p "CMakeLists.txt")
+                   (executable-find "cmake")
+                   (executable-find "make"))
+          (shell-command "cmake . && make"))))
+    (when (file-exists-p module-path)
       (load module-path nil t))))
 
 (defun user/vterm-here ()
   "Open vterm in the current buffer's directory."
   (interactive)
-  (let ((default-directory (if (buffer-file-name)
-                               (file-name-directory (buffer-file-name))
-                             default-directory)))
+  (let ((default-directory (or (and buffer-file-name
+                                    (file-name-directory buffer-file-name))
+                               default-directory)))
     (vterm)))
 
 ;; Yasnippet

@@ -66,19 +66,21 @@ HISTSIZE=10000000
 HISTFILE=$ZDOTDIR/zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
+unsetopt extended_history
+unsetopt inc_append_history_time
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
-setopt hist_ignore_dups
 setopt hist_save_no_dups
 setopt hist_find_no_dups
+setopt no_extended_history
 
 # set opts check man zshoptions
 setopt autocd
 unsetopt beep
 setopt autocd
-setopt aliases 
+setopt aliases
 setopt nocaseglob
 
 # yt-dlp options to work
@@ -103,7 +105,7 @@ add-zsh-hook -Uz chpwd chpwd-osc7-pwd
 
 # Shell integrations
 eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init --cmd cd --hook none zsh)"
 
 # Yazi integration
 function yy() {

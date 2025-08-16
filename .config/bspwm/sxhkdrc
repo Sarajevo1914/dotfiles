@@ -1,39 +1,35 @@
-# BSPWM SXHKD config
-
-# ModKey = super is winkey
-
-## BASIC
+### BASIC
 
 # TERMINAL
 super + Return
-	kitty
+  kitty
 
 # CLOSE AND KILL
 super + {_,shift + }q
-	bspc node -{c,k}
+  bspc node -{c,k}
 
 # LAUNCHER
 super + @space
-	dmenu_run
+  dmenu_run
 
-# LOCK
+# LOCK AND SUSPEND
 super + alt + x
-	slock
+  slock
 
-# LOCK AND SUSPEND TODO
-#super + ctrl + x
-	
+super + ctrl + x
+  slock & systemctl suspend
+
 # QUIT / RESTART bspwm
 super + alt + {q,r}
-	bspc {quit,wm -r}
+  bspc {quit,wm -r}
 
-# RELOAD SXHKD
-super + Escape
-	pkill -USR1 -x sxhkd
+# RELOAD CONFIGS
+super + {Escape,shift + p}
+  pkill -USR1 -x {sxhkd,polybar}
 
-# RELOAD POYBAR
-super + shift + p
-	pkill -USR1 -x polybar
+# TOGGLE POLYBAR VISIBILITY
+### TODO
+super + b
 
 ###  SCRATCHPADS TODO
 
@@ -42,36 +38,48 @@ super + shift + p
 
 # FOCUS, SEND TO DESKTOP
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+  bspc {desktop -f,node -d} '^{1-9,10}'
 
 # FOCUS / MOVE WINDOW IN CURRENT DESKTOP
 super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+  bspc node -{f,s} {west,south,north,east}
 
-# FOCUS LAST WINDOWNS IN CURRENT DESKTOP
+# CYCLE WINDOWS IN CURRENT DESKTOP
 super + {_,shift + }c
-	bspc node -f {next,prev}.local.!hidden.window
+  bspc node -f {next,prev}.local.!hidden.window
 
-# FOCUS ADJACENT DESKTOP TODO
+# ADJACENT DESKTOP NAVIGATION
 super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
-# make work with g ;
-# alt jk
-# alt shift jk to move to adjacent desktop
-# mod shift ^^ to move to adjacent desktop
+  bspc desktop -f {prev,next}.local
 
-# FOCUS LAST DEKSTOP
+super + {g,semicolon}
+  bspc desktop -f {prev,next}.local
+
+alt + {j,k}
+  bspc desktop -f {prev,next}.local
+
+# SEND TO ADJACENT DESKTOP
+super + shift + bracket{left,right}
+  bspc node -d {prev,next}.local
+
+super + shift + {g,semicolon}
+  bspc node -d {prev,next}.local
+
+alt + shift + {j,k}
+  bspc node -d {prev,next}.local
+
+# FOCUS LAST WINDOW/DEKSTOP
 super + {grave,Tab}
-	bspc {node,desktop} -f last
+  bspc {node,desktop} -f last
 
 # FOCUS LAST MONITOR TODO
 
 # CHANGE SIZE OF WINDOW
 super + alt + {h,j,k,l}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+  bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
 super + alt + shift + {h,j,k,l}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+  bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 ### MULTI MONITOR TODO
 
@@ -79,88 +87,63 @@ super + alt + shift + {h,j,k,l}
 
 # MOVE FLOATING WINDOW
 super + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
+  bspc node -v {-20 0,0 20,0 -20,20 0}
 
-### LAYOUT TODO
+### LAYOUT
 
 # MONOCLE
 super + m
-	bspc desktop -l next
+  bspc desktop -l next
 
-# TILED, PSEUDO TILED, FLOATING, FULLSCREEN
-super + {t,shift + t,s,f}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+# TILED, FLOATING, FULLSCREEN
+super + {t,shift + space,f,shift + f}
+  bspc node -t {tiled,floating,fullscreen,\~fullscreen}
 
-# set the node flags
-#super + ctrl + {m,x,y,z}
-	bspc node -g {marked,locked,sticky,private}
+# STICKY
+super + alt + s
+  bspc node -g sticky
 
-# focus the node for the given path jump
-#super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
+### PRESELECTION
 
-
-# focus the older or newer node in the focus history
-#super + {o,i}
-	bspc wm -h off; \
-	bspc node {older,newer} -f; \
-	bspc wm -h on
-
-### preselect
-
-# preselect the direction
+# PRESELECT DIRECTION
 super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
+  bspc node -p {west,south,north,east}
 
-# preselect the ratio
+# PRESELECT RATIO
 super + ctrl + {1-9}
-	bspc node -o 0.{1-9}
+  bspc node -o 0.{1-9}
 
-# cancel the preselection for the focused node
-super + ctrl + space
-	bspc node -p cancel
-
-# cancel the preselection for the focused desktop
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
-
+# CANCEL PRESELECTION
+super + ctrl + {_,shift + }space
+  {bspc node -p cancel, bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel}
 
 ### LAUNCHERS
 
-# BROWSER
-super + w
-	firefox
+super + {w,e,y}
+  {firefox,pcmanfm,gammy}
 
-# FILE MANAGER GUI
-super + e
-	pcmanfm
-
-# EMACS
-super + a
-	emacsclient -c -a ""
-
-super + shift + a
-	emacs --debug-init
+super + {_,shift + }a
+  {emacsclient -c -a "",emacs --debug-init}
 
 ### MEDIA KEYS
 
 XF86AudioLowerVolume
-	wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+  wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 
 XF86AudioRaiseVolume
-	wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+  wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
 
 XF86AudioMute
-	wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+  wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 
 XF86AudioMicMute
-	pactl set-source-mute @DEFAULT_SOURCE@ toggle
+  pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 XF86MonBrightnessUp
-	brightnessctl s +2%
+  brightnessctl s +2%
 
 XF86MonBrightnessDown
-	brightnessctl s 2%-
+  brightnessctl s 2%-
 
 Print
-	flameshot gui
+  flameshot gui

@@ -1,0 +1,50 @@
+general {
+        colors = true
+        interval = 5
+}
+
+order += "volume master"
+order += "backlight"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "battery all"
+order += "tztime local"
+
+wireless _first_ {
+        format_up = "W: %quality %essid"
+        format_down = "W: down"
+}
+
+ethernet _first_ {
+        format_up = "E: %ip (%speed)"
+        format_down = "E: down"
+}
+
+battery all {
+        format = "%status %percentage %remaining"
+        last_full_capacity = true
+        format_percentage = "%.0f%s"
+        status_chr = "▲"
+        status_bat = "▼"
+        status_full = "■"
+}
+
+volume master {
+       device = "default"
+       format = "V: %volume"
+       format_muted = "MUTED"
+
+}
+
+tztime local {
+        format = "%Y-%m-%d %H:%M"
+}
+
+backlight {
+          format = "B: {level}%"
+          brightness_minimal = 1
+          brightness_delta = 3
+          cache_timeout = 0
+          command = brightnessctl
+          hide_when_unavailable = true
+}

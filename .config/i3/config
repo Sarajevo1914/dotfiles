@@ -1,7 +1,7 @@
 set $mod Mod4
 include ~/.config/i3/keys.conf
 
-exec --no-startup-id nitrogen --restore
+exec_always --no-startup-id nitrogen --restore
 
 font pango:monospace 8
 floating_modifier $mod

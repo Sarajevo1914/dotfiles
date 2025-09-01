@@ -10,7 +10,7 @@ super + {_,shift + }q
 
 # LAUNCHER
 super + @space
-  dmenu_run
+  /usr/bin/dmenu_run -m 0
 
 # LOCK AND SUSPEND
 super + alt + x

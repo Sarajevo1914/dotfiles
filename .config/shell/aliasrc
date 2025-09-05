@@ -36,7 +36,7 @@ alias \
 
 # These common commands are just too long! Abbreviate them
 alias \
- ns="nsxiv-rifle" \
+ ns="ns *" \
  powersave="sudo cpupower frequency-set -g powersave" \
  performance="sudo cpupower frequency-set -g performance" \
  hx="helix" \

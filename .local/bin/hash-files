@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# gpt-4-turbo generated
+# this script hash all files in directory sort -k 2 and make a output with hash and paths and another file with only paths
+# firts arg is output directory, the follow arg are the directory to find and hash all files
+
+# Check if at least two arguments are provided
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 output_directory dir1 [dir2 ...]"
+    exit 1
+fi
+
+# Set output directory (first argument)
+OUTPUT_DIR="$1"
+shift  # Shift arguments so that $@ now contains only the directories to hash
+
+# Check if output directory exists, if not, create it
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir -p "$OUTPUT_DIR" || { echo "Error: Could not create output directory"; exit 1; }
+fi
+
+# Iterate through provided directories
+for dir in "$@"; do
+    if [ -d "$dir" ]; then
+        # Use the directory name as-is for output files
+        HASH_FILE="${OUTPUT_DIR}/${dir}.txt"
+        PATH_FILE="${OUTPUT_DIR}/${dir}_path.txt"
+
+        # Empty output files
+        > "$HASH_FILE"
+        > "$PATH_FILE"
+
+        # Find and hash files
+        find "$dir" -type f -print0 | while IFS= read -r -d '' file; do
+            hash=$(sha256sum "$file" | awk '{print $1}')  # Extract only the hash
+            echo "$hash $file" >> "$HASH_FILE"  # Store hash + full path
+            echo "$file" >> "$PATH_FILE"        # Store only full path
+        done
+
+        # Sort files based on the second column (file path)
+        sort -k 2 "$HASH_FILE" -o "$HASH_FILE"
+        sort "$PATH_FILE" -o "$PATH_FILE"
+
+        echo "Hashes saved to '$HASH_FILE'"
+        echo "Paths saved to '$PATH_FILE'"
+    else
+        echo "Warning: '$dir' is not a valid directory"
+    fi
+done
+

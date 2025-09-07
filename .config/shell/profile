@@ -10,10 +10,18 @@ local_bins="$(find "$HOME/.local/bin" -type d | paste -sd ':' -)"
 export PATH="$PATH:$local_bins:$HOME/.config/emacs/bin"
 
 # Default programs
+# some need a wrapper sh script
 export EDITOR="nvim"
+export EMACS="emacs-launch"
+export EMACS_DEBUG="emacs-debug"
 export TERMINAL="kitty"
 export TERMINAL_PROG="kitty"
 export BROWSER="firefox"
+export FILEMANAGER="pcmanfm"
+export LOCKER_X11="slock"
+export LOCKER_WAYLAND="swaylock-launch"
+export LAUNCHER_X11="dmenu-launch"
+export LAUNCHER_WAYLAND="wmenu-run"
 
 # Firefox
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
@@ -23,7 +31,6 @@ fi
 export XDG_CURRENT_DESKTOP=GNOME
 export MOZ_GTK_TITLEBAR_DECORATION=system
 export GTK_CSD=0
-
 
 # Man pager
 

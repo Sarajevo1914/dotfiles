@@ -2,22 +2,22 @@
 
 # TERMINAL
 super + Return
-  kitty
+  $TERMINAL
 
 # CLOSE AND KILL
 super + {_,shift + }q
   bspc node -{c,k}
 
 # LAUNCHER
-super + @space
-  /usr/bin/dmenu_run -m 0
+super + d
+  $LAUNCHER_X11
 
 # LOCK AND SUSPEND
 super + alt + x
-  slock
+  $LOCKER_X11
 
 super + ctrl + x
-  slock & systemctl suspend
+  $LOCKER_X11 & systemctl suspend
 
 # QUIT / RESTART bspwm
 super + alt + {q,r}
@@ -120,10 +120,10 @@ super + ctrl + {_,shift + }space
 ### LAUNCHERS
 
 super + {w,e,y}
-  {firefox,pcmanfm,gammy}
+  {$BROWSER,$FILEMANAGER,gammy}
 
 super + {_,shift + }a
-  {emacsclient -c -a "",emacs --debug-init}
+  {$EMACS,$EMACS_DEBUG}
 
 ### MEDIA KEYS
 

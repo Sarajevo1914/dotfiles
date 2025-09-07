@@ -47,10 +47,10 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-# Personal folder overrides
-export XDG_DOWNLOAD_DIR="$HOME/dl"
-export XDG_DOCUMENTS_DIR="$HOME/docs"
-export XDG_PICTURES_DIR="$HOME/pics"
+# XDG user dirs
+export XDG_DOWNLOAD_DIR="$HOME/Downloads"
+export XDG_DOCUMENTS_DIR="$HOME/Documents"
+export XDG_PICTURES_DIR="$HOME/Pictures"
 
 # ~/ Clean-up:
 #export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"

@@ -1,7 +1,12 @@
 #!/bin/sh
 
-# Basic settings
+# TODO
+# zoxide maybe is to cost to performance
+# req trash-cli ouch
+# wl-copy for wayland
+# xclip for x11
 
+# Basic settings
 set autoquit true
 set shell sh
 set shellopts '-eu'
@@ -14,7 +19,6 @@ set mouse true
 set ratios '1:2'
 set sixel true
 
-
 ### LF PREVIEWS
 # use the one that work on your terminal
 # for some rason some terminal dont work with vanila ctpv and stpv config
@@ -23,36 +27,28 @@ set sixel true
 # kitty work only on ctpv and the kitty protocols sh
 # but i like the text preview form ctpv that the pistol...
 
-### TODO
-# make a universal script that work on any terminal
-# iven if not support sixel or the kitty protocol
-# option to preview image, video, audio files, any kind of text, PDF, etc. 
-
-# kitty protocol, pistol for fallback
-# require chroma, archiver
-
+# Kitty Protocol
+# req pistol chroma archiver
 # set previewer ~/.config/lf/preview-kitty.sh
 # set cleaner ~/.config/lf/cleaner-kitty.sh
 
+# Sixel
 # set previewer ~/.config/lf/sixel.sh
 
 # ctpv preview
-
 set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
 &ctpvquit $id
 
 # stpv preview
-
 # set previewer stpv
 # set cleaner stpvimgclr
 # &stpvimg --listen $id
 # cmd on-quit $stpvimg --end $id
 
 # cmd/funcions
-
-cmd bulkrename $vidir
+#cmd bulkrename $vidir
 
 cmd open &{{
     case $(file --mime-type -Lb $f) in
@@ -86,54 +82,92 @@ cmd open &{{
 #     }
 # }}
 
-
-# ouch decompress integraiton
-
 cmd extract ${{
-    set -f
-    ouch decompress $fx
-}}
-
-
-cmd mkdir $mkdir -p "$@"
-
-cmd delete ${{
-    clear; tput cup $(($(tput lines)/3)); tput bold
+    clear
+    tput cup $(($(tput lines)/3))
     set -f
     printf "%s\n\t" "$fx"
-    printf "delete?[y/N]"
+    printf "extract? [y/N] "
     read ans
-    [ $ans = "y" ] && rm -rf -- $fx
+    case $ans in
+        [Yy]*)
+            for file in $fx; do
+                ouch decompress "$file" && echo "Extracted: $file"
+            done
+            ;;
+    esac
 }}
 
-#cmd trash ${{
-#    clear; tput cup $(($(tput lines)/3)); tput bold
-#    set -f
-#    printf "%s\n\t" "$fx"
-#    printf "sent to trash?[y/N]"
-#    read ans
-#    [ $ans = "y" ] && trash-put -- $fx
-#}}
+cmd mkdir ${{
+    printf "Directory name(s): "
+    read -r ans
+    [ -z "$ans" ] && exit 0
+    mkdir -p -- $ans && echo "Created: $ans"
+}}
+
+cmd delete ${{
+    clear
+    tput cup $(($(tput lines)/3))
+    set -f
+    printf "Delete files:\n"
+    printf "%s\n" $fx
+    printf "\nConfirm deletion? [y/N] "
+    read -r ans
+    case $ans in
+        [Yy]*)
+            if command -v trash-put >/dev/null 2>&1; then
+                trash-put -- $fx
+                echo "Files moved to trash"
+            else
+                echo "trash-cli not found, permanently delete?"
+                printf "\nConfirm deletion? [y/N] "
+                read -r confirm
+                case $confirm in
+                    [Yy]*)
+                        rm -rf -- $fx
+                        echo "Files permanently deleted"
+                        ;;
+                    *) echo "Aborted";;
+                esac
+            fi
+            ;;
+        *) echo "Aborted";;
+    esac
+}}
+
+cmd copy-name ${{
+    basename -a -- $fx | if command -v wl-copy >/dev/null 2>&1; then
+        wl-copy
+    elif command -v xclip >/dev/null 2>&1; then
+        xclip -selection clipboard
+    else
+        echo "copy-name No clipboard manager found"
+    fi
+}}
+
+cmd copy-path ${{
+    realpath -- $fx | if command -v wl-copy >/dev/null 2>&1; then
+        wl-copy
+    elif command -v xclip >/dev/null 2>&1; then
+        xclip -selection clipboard
+    else
+        echo "copy-path No clipboard manager found"
+    fi
+}}
 
 cmd on-select &{{
-    lf -remote "send $id set statfmt \"$(eza -lbdg --total-size --time-style long-iso --color=always "$f")\""
+                   lf -remote "send $id set statfmt \"$(eza -lbdg --total-size --time-style long-iso --color=always "$f")\""
+
+                   if command -v zoxide >/dev/null 2>&1; then
+                      zoxide add "$PWD"
+                   fi
 }}
 
-# Bindings
-
+# Keybidings
 map <enter> shell
-
-# execute current file (must be executable)
-map x $$f
-map X !$f
-
-map o &mimeopen $f
-map O $mimeopen --ask $f
-
-map E :extract; reload
-
 map q quit
 
+# Movements
 map k up
 map j down
 map h updir
@@ -145,7 +179,6 @@ map <right> open
 
 map <c-b> page-up
 map <c-f> page-down
-
 map <pgup> page-up
 map <pgdn> page-down
 
@@ -159,34 +192,52 @@ map K top
 map <a-j> page-down
 map <a-k> page-up
 
-# redraw the select item
+# Misc
 map <c-l> redraw
-
-# reload the current dir?
 map <c-r> reload
+map md mkdir
 
+# Search and Selection
 map f find
 map / search
+
+map n search-next
+map N search-prev
 
 map v invert
 map u unselect
 map C clear
 
+map <space> :toggle; down
+map <c-space> :toggle
+map <c-a> :unselect; invert
+
+# File Operations
 map DD delete
 map p paste
 map y copy
 map x cut
 
-#map Dd trash
-#map dr restore-trash
+map E :extract; reload
 
-# Comb
+# Clipboard
+map Yn copy-name
+map Yp copy-path
 
+# External
+map x $$f # execute current file (must be executable)
+map X !$f
+map o open
+map O $mimeopen --ask $f
+
+# View
 map zh set hidden!
 map zr set reverse!
 map zn set info
 map zs set info size
 map zt set info time
+
+# Sort
 map za :set sortby name; set info size
 map sn :set sortby natural; set info
 map ss :set sortby size; set info size
@@ -194,27 +245,25 @@ map st :set sortby time; set info time
 map sa :set sortby atime; set info atime
 map sc :set sortby ctime; set info ctime
 map se :set sortby ext; set info
-map <space> :toggle; down
-map <c-space> :toggle
-# map <a-space> :toggle; up # dont work
- 
+
 # Rename
+map c push A<c-u>          # New rename
+map A :rename; cmd-end     # At very end
+map a :rename; cmd-right   # After extension
+map I :rename; cmd-home    # At very beginning
+map i :rename              # Before extension
+#map B bulkrename           # Bulk rename with vidir
 
-map A :rename; cmd-end # at the very end
-map c push A<c-u> # new rename
-map I :rename; cmd-home # at the very beginning
-map i :rename # before extension
-map a :rename; cmd-right # after extension
-map B bulkrename
+# example
+# III-beginning-iii-before-extension.aaa-after-extension-AAA-at-very-end
 
-# unmaping {H,M,L} {high,middle,low}
-
+# Unmaping default keybidings
 map H
 map M
 map L
+map m
 
 # Shortcuts
-
 map gd cd ~/Documents
 map gD cd ~/Downloads
 map gp cd ~/Pictures

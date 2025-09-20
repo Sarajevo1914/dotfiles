@@ -225,8 +225,6 @@ map Yn copy-name
 map Yp copy-path
 
 # External
-map x $$f # execute current file (must be executable)
-map X !$f
 map o open
 map O $mimeopen --ask $f
 

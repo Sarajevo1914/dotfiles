@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/bin/dmenu_run -m 0
+exec /usr/bin/dmenu_run

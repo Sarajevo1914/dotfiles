@@ -28,8 +28,8 @@ super + {Escape,shift + p}
   pkill -USR1 -x {sxhkd,polybar}
 
 # TOGGLE POLYBAR VISIBILITY
-### TODO
 super + b
+  ~/.config/bspwm/polybar_toggle.sh
 
 ###  SCRATCHPADS TODO
 
@@ -38,7 +38,7 @@ super + b
 
 # FOCUS, SEND TO DESKTOP
 super + {_,shift + }{1-9,0}
-  bspc {desktop -f,node -d} '^{1-9,10}'
+  bspc {desktop -f,node -d} '{1-9,10}.local'
 
 # FOCUS / MOVE WINDOW IN CURRENT DESKTOP
 super + {_,shift + }{h,j,k,l}
@@ -75,11 +75,20 @@ super + {grave,Tab}
 # FOCUS LAST MONITOR TODO
 
 # CHANGE SIZE OF WINDOW
-super + alt + {h,j,k,l}
-  bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+# super + alt + {h,j,k,l}
+#   bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
-super + alt + shift + {h,j,k,l}
-  bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+# super + alt + shift + {h,j,k,l}
+#   bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+super + alt + {Left,Down,Up,Right}
+  bspc node -z {left -20 0 || bspc node -z right -20 0, \
+                bottom 0 20 || bspc node -z top 0 20, \
+                top 0 -20 || bspc node -z bottom 0 -20, \
+                right 20 0 || bspc node -z left 20 0}
+
+super + alt + shift + {Left,Down,Up,Right}
+  bspc node -z {right -20 0, top 0 20, bottom 0 -20, left 20 0}
 
 ### MULTI MONITOR TODO
 

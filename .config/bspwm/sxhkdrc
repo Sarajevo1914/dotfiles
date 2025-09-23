@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ### BASIC
 
 # TERMINAL
@@ -31,7 +33,7 @@ super + {Escape,shift + p}
 super + b
   ~/.config/bspwm/polybar_toggle.sh
 
-###  SCRATCHPADS TODO
+### SCRATCHPADS TODO
 
 
 ### WIN MOVEMENTS
@@ -48,7 +50,7 @@ super + {_,shift + }{h,j,k,l}
 super + {_,shift + }c
   bspc node -f {next,prev}.local.!hidden.window
 
-# ADJACENT DESKTOP NAVIGATION
+# FOCUS ADJACENT DESKTOP
 super + bracket{left,right}
   bspc desktop -f {prev,next}.local
 
@@ -68,13 +70,11 @@ super + shift + {g,semicolon}
 alt + shift + {j,k}
   bspc node -d {prev,next}.local
 
-# FOCUS LAST WINDOW/DEKSTOP
-super + {grave,Tab}
-  bspc {node,desktop} -f last
+# FOCUS LAST DESKTOP IN CURRENT MONITOR
+super + Tab
+  bspc desktop -f last.local
 
-# FOCUS LAST MONITOR TODO
-
-# CHANGE SIZE OF WINDOW
+# CHANGE SIZE OF WINDOW TODO
 # super + alt + {h,j,k,l}
 #   bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
@@ -90,9 +90,29 @@ super + alt + {Left,Down,Up,Right}
 super + alt + shift + {Left,Down,Up,Right}
   bspc node -z {right -20 0, top 0 20, bottom 0 -20, left 20 0}
 
-### MULTI MONITOR TODO
+### MULTI-MONITORS
 
-### FLOATING WINDOW
+# CYCLE MONITOR
+super + {comma,period}
+  bspc monitor -f {next,prev}
+
+# SEND WINDOW TO ADJACENT MONITOR
+super + shift + {comma,period}
+  bspc node -m {next,prev} --follow
+
+# FOCUS LAST MONITOR FOCUSED
+super + ctrl + Tab
+  bspc monitor -f last
+
+# FOCUS N MONITOR
+# super + alt + {1-9,0}
+#   bspc monitor -f '^{1-9,10}'
+
+# SEND WINDOW TO N MONITOR
+# super + alt + shift + {1-9,0}
+#   bspc node -m '^{1-9,10}'
+
+### FLOATING WINDOWS
 
 # MOVE FLOATING WINDOW
 super + {Left,Down,Up,Right}
@@ -105,8 +125,8 @@ super + m
   bspc desktop -l next
 
 # TILED, FLOATING, FULLSCREEN
-super + {t,shift + space,f,shift + f}
-  bspc node -t {tiled,floating,fullscreen,\~fullscreen}
+super + {t,shift + space,f}
+  bspc node -t {tiled,floating,\~fullscreen}
 
 # STICKY
 super + alt + s
@@ -127,7 +147,6 @@ super + ctrl + {_,shift + }space
   {bspc node -p cancel, bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel}
 
 ### LAUNCHERS
-
 super + {w,e,y}
   {$BROWSER,$FILEMANAGER,gammy}
 
@@ -135,7 +154,6 @@ super + {_,shift + }a
   {$EMACS,$EMACS_DEBUG}
 
 ### MEDIA KEYS
-
 XF86AudioLowerVolume
   wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 

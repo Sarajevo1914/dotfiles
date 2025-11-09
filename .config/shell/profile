@@ -59,6 +59,9 @@ export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export XDG_DOCUMENTS_DIR="$HOME/Documents"
 export XDG_PICTURES_DIR="$HOME/Pictures"
 
+# Disable Assistive Technology Bridge
+export NO_AT_BRIDGE=1
+
 # ~/ Clean-up:
 #export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
 #export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
@@ -89,13 +92,11 @@ export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME/npm/config/npm-init.js"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR/npm"
 
-
 #export QT_QPA_PLATFORMTHEME=qt5ct:qt6ct
 export QT_QPA_PLATFORMTHEME=qt5ct
 export QT6_QPA_PLATFORMTHEME=qt6ct
 
 # Xcursor
 export XCURSOR_PATH="$XDG_DATA_HOME/icons:$HOME/.icons:/usr/share/icons:/usr/local/share/icons"
-
 
 [ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1

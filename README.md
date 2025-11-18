@@ -24,7 +24,7 @@ zsh pcmanfm neovim emacs kitty firefox mpv nsxiv-git lf eza zoxide
 
 ## X11
 ```
-dmenu slock lxsession
+dmenu slock lxqt-policykit
 ```
 
 ### BSPWM
@@ -39,7 +39,7 @@ i3-wm i3status xdotool
 
 ## Wayland
 ```
-swaylock wmenu-run
+swaylock wmenu xdg-desktop-portal-wlr
 ```
 
 ### Hyprland
@@ -49,7 +49,7 @@ hyprland xdg-desktop-portal-hyprland waybar socat jq
 
 ### Sway
 ```
-sway
+sway jq
 ```
 
 ## Small Rice

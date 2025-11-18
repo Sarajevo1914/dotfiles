@@ -27,8 +27,7 @@ bspc rule -a galculator state=floating
 bspc rule -a Emacs state=tiled
 
 pgrep -x udiskie > /dev/null || udiskie &
-pgrep -x lxpolkit > /dev/null || lxpolkit &
-pgrep -x lxsession > /dev/null || lxsession &
+pgrep -x lxqt-policykit > /dev/null || lxqt-policykit &
 
 $HOME/.config/polybar/init.sh
 # to change bar size need to be change in 2 files

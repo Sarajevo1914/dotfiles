@@ -21,4 +21,5 @@ smart_borders no_gaps
 bar {
     position bottom
     status_command ~/.config/sway/bar.sh
+    font pango:DejaVu Sans 10
 }

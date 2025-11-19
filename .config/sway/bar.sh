@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# On WLAN comment the one that works for you
+# iwgetid is a cmd of wpa_supplicant, enable if you use it
+# iw is from pkg iw
+
 echo '{"version":1}'
 echo '['
 echo '[],'
@@ -7,7 +11,8 @@ echo '[],'
 while true; do
       VOL=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)"%"}')
       BL=$(brightnessctl -m | cut -d, -f4)
-      WLAN=$(iwgetid -r)
+#     WLAN=$(iwgetid -r)
+      WLAN=$(iw dev wlan0 link | grep SSID | awk '{print $2}')
       LAN=$(ip -o link show | awk -F': ' '{print $2}' | grep -E '^e' | head -n1)
       BAT=$(cat /sys/class/power_supply/BAT0/capacity)%
       DATE=$(date '+%Y-%m-%d %X')

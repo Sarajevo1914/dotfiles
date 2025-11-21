@@ -4,3 +4,5 @@
 [ -f "$HOME/.Xresources.cursor" ] && xrdb -merge "$HOME/.Xresources.cursor"
 
 [ -f "$HOME/.config/shell/profile" ] && . "$HOME/.config/shell/profile"
+
+[ -f "$HOME/.xinitrc" ] && . "$HOME/.xinitrc"

@@ -33,53 +33,44 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # add ctrl-left and right to change cursor in the beging word
 
 # zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit light MichaelAquilina/zsh-you-should-use
-#zinit light MichaelAquilina/zsh-auto-notify
+zinit light zsh-users/zsh-syntax-highlighting
 
 export YSU_MESSAGE_POSITION="after"
-
 
 # Load completions
 autoload -U compinit && compinit
 zinit cdreplay -q
 
 # Completions styling
-zstyle ':completions:*' matcher-list 'm:{a-z]={A-Za-z}}'
-zstyle ':completions:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completions:*' menu no
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 # change ls to exa/eza
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Adding snippets
 zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
-zinit snippet OMZP::command-not-found
 
 # HISTORY
-HISTSIZE=10000000
-HISTFILE=$ZDOTDIR/zsh_history
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-unsetopt extended_history
-unsetopt inc_append_history_time
+HISTSIZE=1000000
+SAVEHIST=1000000
+HISTFILE="${XDG_STATE_HOME}/shell_history"
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_find_no_dups
-setopt no_extended_history
+unsetopt extended_history
 
 # set opts check man zshoptions
 setopt autocd
 unsetopt beep
-setopt autocd
 setopt aliases
 setopt nocaseglob
 

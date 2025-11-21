@@ -1,16 +1,25 @@
 #!/bin/sh
 
-# Start dbus session if not already running
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then
-  export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-fi
+# XDG Base Directory spec
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
-# Add ~/.local/bin and subdirs to PATH
-local_bins="$(find "$HOME/.local/bin" -type d | paste -sd ':' -)"
-export PATH="$PATH:$local_bins:$HOME/.config/emacs/bin"
+# if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then
+#   export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+# fi
 
-# Default programs
-# some need a wrapper sh script
+# Add ~/.local/bin and ~/.local/bin/* if they exist
+[ -d "$HOME/.local/bin" ] && PATH="$PATH:$HOME/.local/bin"
+
+for d in "$HOME/.local/bin"/*; do
+  [ -d "$d" ] && PATH="$PATH:$d"
+done
+
+[ -d "$HOME/.config/emacs/bin" ] && PATH="$PATH:$HOME/.config/emacs/bin"
+
+# Default programs (some need wrapper scripts)
 export EDITOR="nvim"
 export EMACS="emacs-launch"
 export EMACS_DEBUG="emacs-debug"
@@ -28,50 +37,43 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
   export MOZ_ENABLE_WAYLAND=1
 fi
 
-export XDG_CURRENT_DESKTOP=GNOME
 export MOZ_GTK_TITLEBAR_DECORATION=system
 export GTK_CSD=0
 
-# Man pager
-
-# bat, dont work with mandoc check
+# Man Pager
+# Bat error with mandoc
 # https://github.com/sharkdp/bat/issues/1145
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
-# vim
-#export MANPAGER='/bin/bash -c "vim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
+# Nvim
+# export MANPAGER="nvim -c 'set ft=man' -"
 
-# nvim
-#export MANPAGER="nvim -c 'set ft=man' -"
-
-# ssh keys archlinux wiki
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
-# XDG Base Directory spec
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_STATE_HOME="$HOME/.local/state"
+# SSH
+# Enable only if using ssh-agent
+# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # XDG user dirs
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export XDG_DOCUMENTS_DIR="$HOME/Documents"
 export XDG_PICTURES_DIR="$HOME/Pictures"
 
-# Disable Assistive Technology Bridge
+# Shared shell history file (XDG state)
+export HISTFILE="${HISTFILE:-$XDG_STATE_HOME/shell_history}"
+
+[ -f "$HISTFILE" ] || {
+  mkdir -p "$(dirname "$HISTFILE")"
+  : > "$HISTFILE"
+  chmod 600 "$HISTFILE"
+}
+
+# Using XDG for software that supported
 export NO_AT_BRIDGE=1
-
-# ~/ Clean-up:
-#export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
-#export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
-#export GNUPGHOME="$XDG_DATA_HOME/gnupg"
-
-export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch-config"
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export EMACSINIT="$HOME/.config/emacs/init.el"
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export KODI_DATA="$XDG_DATA_HOME/kodi"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
@@ -87,16 +89,11 @@ export ELECTRUMDIR="$XDG_DATA_HOME/electrum"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 export RENPY_PATH_TO_SAVES="$XDG_DATA_HOME"
-export EMACSINIT="$HOME/.config/emacs/init.el"
 export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME/npm/config/npm-init.js"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR/npm"
 
-#export QT_QPA_PLATFORMTHEME=qt5ct:qt6ct
 export QT_QPA_PLATFORMTHEME=qt5ct
 export QT6_QPA_PLATFORMTHEME=qt6ct
 
-# Xcursor
 export XCURSOR_PATH="$XDG_DATA_HOME/icons:$HOME/.icons:/usr/share/icons:/usr/local/share/icons"
-
-[ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1

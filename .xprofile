@@ -1,17 +1,6 @@
 #!/bin/sh
 
-# Ensure that xrdb has finished running before moving on to start the WM/DE.
-[ -n "$xrdbpid" ] && wait "$xrdbpid"
+[ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
+[ -f "$HOME/.Xresources.cursor" ] && xrdb -merge "$HOME/.Xresources.cursor"
 
-# Source .Xresources files
-xrdb -merge "$HOME/.Xresources"
-xrdb -merge "$HOME/.Xresources.cursor"
-
-# Source .xinitrc
-if [ -f ~/.xinitrc ]; then
-    source ~/.xinitrc
-fi
-
-# Start Portals
-pgrep -xu "$USER" xdg-desktop-portal >/dev/null 2>&1 || /usr/lib/xdg-desktop-portal &
-pgrep -xu "$USER" xdg-desktop-portal-gtk >/dev/null 2>&1 || /usr/lib/xdg-desktop-portal-gtk &
+[ -f "$HOME/.config/shell/profile" ] && . "$HOME/.config/shell/profile"

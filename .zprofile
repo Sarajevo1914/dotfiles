@@ -1,1 +1,3 @@
-/home/ecarus/.config/shell/profile
+#!/bin/sh
+
+[ -f "$HOME/.config/shell/profile" ] && . "$HOME/.config/shell/profile"

@@ -9,10 +9,11 @@ shopt -s cdspell
 shopt -s expand_aliases
 bind "set completion-ignore-case on"
 
-export HISTFILE="${XDG_CONFIG_HOME:-$HOME/.config}/shell/bash_history"
-HISTSIZE=10000000
-HISTFILESIZE=10000000
+# HISTORY
+HISTSIZE=1000000
+HISTFILESIZE=1000000
 shopt -s histappend
+export HISTFILE="${HISTFILE:-$XDG_STATE_HOME/shell_history}"
 export HISTCONTROL=ignoreboth:erasedups
 
 # Load files if exist

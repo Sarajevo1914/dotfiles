@@ -20,6 +20,7 @@
          ("M-n" . move-text-down)))
 
 ;; Multiple-cursors
+;; Read docs https://github.com/magnars/multiple-cursors.el
 (use-package multiple-cursors
   :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -51,7 +52,7 @@
 
 ;; Marginalia
 (use-package marginalia
-  :defer t
+  :demand t
   :config
   (marginalia-mode 1))
 
@@ -84,6 +85,32 @@
   :defer t
   :config
   (setq wgrep-auto-save-buffer t))
+
+;; Which-key
+(use-package which-key
+  :demand t
+  :config
+  (which-key-mode 1))
+
+;; Orderless
+(use-package orderless
+  :demand t
+  :config
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; Rainbow-delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Colorful-mode
+(use-package colorful-mode
+  :hook prog-mode
+  :config
+  (setq colorful-use-prefix t
+        colorful-only-strings 'only-prog
+        css-fontify-colors nil)
+  (global-colorful-mode t))
 
 ;; Company
 (use-package company

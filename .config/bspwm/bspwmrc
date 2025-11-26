@@ -1,7 +1,10 @@
 #!/usr/bin/env sh
 
-pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/bspwm/sxhkdrc &
-pgrep -x nitrogen > /dev/null || nitrogen --restore &
+pgrep -x sxhkd > /dev/null 2>&1 || sxhkd -c ~/.config/bspwm/sxhkdrc &
+pgrep -x nitrogen > /dev/null 2>&1 || nitrogen --restore &
+pgrep -x emacs > /dev/null 2>&1 || emacs --daemon &
+pgrep -x udiskie > /dev/null 2>&1 || udiskie &
+pgrep -x lxqt-policykit > /dev/null 2>&1 || lxqt-policykit &
 
 xrandr --output eDP1 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output DP1 --off --output DP2 --off --output DP3 --off --output DP4 --off --output HDMI1 --mode 1920x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off
 
@@ -25,9 +28,6 @@ bspc rule -a gammy state=floating
 bspc rule -a mediainfo-gui state=floating
 bspc rule -a galculator state=floating
 bspc rule -a Emacs state=tiled
-
-pgrep -x udiskie > /dev/null || udiskie &
-pgrep -x lxqt-policykit > /dev/null || lxqt-policykit &
 
 $HOME/.config/polybar/init.sh
 # to change bar size need to be change in 2 files

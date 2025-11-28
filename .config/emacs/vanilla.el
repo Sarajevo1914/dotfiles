@@ -1,20 +1,33 @@
 ;;; vanilla.el --- Vanilla Emacs configuration -*- lexical-binding: t; -*-
 
 ;; General settings
-(setq inhibit-startup-message t                        ; Disable splash screen
-      initial-scratch-message nil                      ; Empty scratch buffer
-      delete-by-moving-to-trash t                      ; Use system trash on delete
-      make-backup-files t                              ; Enable backups
-      backup-by-copying t                              ; Copy files for backup (safer for symlinks)
-      require-final-newline t                          ; Add newline at end of file on save
-      load-prefer-newer t                              ; Prefer newer versions of files
-      apropos-do-all t                                 ; Show all results in apropos
-      mouse-yank-at-point t                            ; Yank at point, not click location
-      read-file-name-completion-ignore-case t          ; Ignore case in file name completion
-      read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
-      vc-follow-symlinks t                             ; Follow symlinks without confirmation
-      size-indication-mode t                           ; Show file size in mode line
-      browse-url-browser-function 'browse-url-firefox) ; Open URL links using firefox
+(setq
+ inhibit-startup-message t                        ; Disable splash screen
+ initial-scratch-message nil                      ; Empty scratch buffer
+ delete-by-moving-to-trash t                      ; Use system trash on delete
+ make-backup-files t                              ; Enable backups
+ backup-by-copying t                              ; Copy files for backup (safer for symlinks)
+ require-final-newline t                          ; Add newline at end of file on save
+ load-prefer-newer t                              ; Prefer newer versions of files
+ apropos-do-all t                                 ; Show all results in apropos
+ mouse-yank-at-point t                            ; Yank at point, not click location
+ read-file-name-completion-ignore-case t          ; Ignore case in file name completion
+ read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
+ vc-follow-symlinks t                             ; Follow symlinks without confirmation
+ size-indication-mode t                           ; Show file size in mode line
+ browse-url-browser-function 'browse-url-firefox  ; Open URL links using firefox
+ my-emacs-trash-dir "~/.cache/emacs/"             ; Set trash dir
+ backup-directory-alist `((".*" . ,my-emacs-trash-dir))           ; Backups files
+ auto-save-file-name-transforms `((".*" ,my-emacs-trash-dir t))   ; Auto-save files
+ auto-save-list-file-prefix (concat my-emacs-trash-dir ".saves-") ; Auto-save crash recovery
+ lock-file-name-transforms `((".*" ,my-emacs-trash-dir))          ; Lockfiles
+)
+
+(make-directory my-emacs-trash-dir t) ; Create if not exist
+
+;; Save TRAMP files in trash
+(setq tramp-persistency-file-name
+      (concat my-emacs-trash-dir "tramp"))
 
 ;; Default buffer settings
 (setq-default

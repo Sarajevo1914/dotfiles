@@ -67,6 +67,12 @@
 ;;                     :height 160) ;; 160 = 16pt
 (add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-14"))
 
+;; Some Keys
+(global-set-key (kbd "M-u") 'upcase-dwim)
+(global-set-key (kbd "M-l") 'downcase-dwim)
+(global-set-key (kbd "M-c") 'capitalize-dwim)
+(global-set-key (kbd "C-c t") #'toggle-case)
+
 ;; Whitespace
 (use-package whitespace
   :config

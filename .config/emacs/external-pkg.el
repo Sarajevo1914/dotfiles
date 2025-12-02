@@ -10,7 +10,7 @@
 (use-package undo-tree
   :config
   (setq undo-tree-history-directory-alist
-        `((".*" . ,my-emacs-trash-dir))
+        `(("." . ,my-emacs-trash-dir))
         undo-tree-auto-save-history t)
   (global-undo-tree-mode))
 

@@ -17,7 +17,6 @@ set ignorecase true
 set period 1
 set mouse true
 set ratios '1:2'
-set sixel true
 
 ### LF PREVIEWS
 # use the one that work on your terminal

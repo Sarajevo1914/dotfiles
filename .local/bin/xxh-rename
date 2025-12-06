@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+
+# TODO:
+# Fix output format, better aling
+# [DUP] files should be on the end of list, easy to read
+# Some filename have errors
+
+set -euo pipefail
+
+RECURSIVE=0
+DRY_RUN=0
+
+usage() {
+  cat << EOF
+Usage: ${0##*/} [OPTIONS] <file|directory>...
+
+Options:
+  -r    Recursive (process subdirectories)
+  -d    Dry-run (no changes)
+  -h    Show help
+EOF
+  exit "${1:-0}"
+}
+
+while getopts "rdh" opt; do
+  case $opt in
+    r) RECURSIVE=1 ;;
+    d) DRY_RUN=1 ;;
+    h) usage 0 ;;
+    *) usage 1 ;;
+  esac
+done
+shift $((OPTIND-1))
+
+[[ $# -eq 0 ]] && { printf "Error: no files provided\n" >&2; usage 1; }
+
+command -v xxhsum >/dev/null || {
+  printf "Error: xxhsum is required\n" >&2
+  exit 1
+}
+
+[[ $DRY_RUN -eq 1 ]] && printf "=== DRY-RUN ===\n\n"
+
+declare -A seen
+
+# Extract hash without awk
+get_hash() {
+  local output
+  output=$(xxhsum -H2 "$1" 2>/dev/null) || return 1
+  set -- $output
+  [[ -n "$1" ]] || return 1
+  printf "%s" "$1"
+}
+
+# Generate 8-char salt from filepath
+get_salt() {
+  local output
+  output=$(printf "%s" "$1" | xxhsum -H2 2>/dev/null) || return 1
+  set -- $output
+  [[ -n "$1" ]] || return 1
+  printf "%s" "${1:0:8}"
+}
+
+# Prevent overwriting existing files
+safe_rename() {
+  local src=$1 dst=$2 base name ext n=1
+
+  name=$(basename "$dst")
+  if [[ "$name" == *.* ]]; then
+    ext=".${name#*.}"
+    base="${dst%.*}"
+  else
+    ext=""
+    base="$dst"
+  fi
+
+  while [[ -e "$dst" && "$dst" != "$src" ]]; do
+    dst="${base}_${n}${ext}"
+    ((n++))
+  done
+
+  printf "%s" "$dst"
+}
+
+process() {
+  local f=$1 dir name hash ext new salt dst
+
+  [[ -f "$f" ]] || return 0
+
+  dir=$(dirname "$f")
+  name=$(basename "$f")
+
+  hash=$(get_hash "$f") || {
+    printf "Error: cannot hash %s\n" "$f" >&2
+    return 1
+  }
+
+  # Skip if name already starts with the hash
+  [[ "$name" == "$hash."* || "$name" == "$hash"_* ]] && return 0
+
+  # Preserve full extension (e.g., .tar.gz)
+  ext=""
+  if [[ "$name" == *.* ]]; then
+    ext=".${name#*.}"
+    ext="${ext,,}"
+  fi
+
+  new="${hash}${ext}"
+
+  # Detect duplicate content or existing target
+  if [[ -v seen[$hash] || ( -e "$dir/$new" && "$dir/$new" != "$f" ) ]]; then
+    salt=$(get_salt "$f") || return 1
+    new="${hash}_${salt}${ext}"
+    dst=$(safe_rename "$f" "$dir/$new")
+    printf "[DUP]  %s -> %s\n" "$name" "$(basename "$dst")"
+  else
+    dst=$(safe_rename "$f" "$dir/$new")
+    printf "       %s -> %s\n" "$name" "$(basename "$dst")"
+  fi
+
+  seen[$hash]=1
+
+  if [[ $DRY_RUN -eq 0 ]]; then
+    mv "$f" "$dst" || {
+      printf "Error: cannot rename %s\n" "$f" >&2
+      return 1
+    }
+  fi
+}
+
+# Process inputs
+for target in "$@"; do
+  if [[ ! -e "$target" ]]; then
+    printf "Error: does not exist: %s\n" "$target" >&2
+    continue
+  fi
+
+  if [[ -f "$target" ]]; then
+    process "$target"
+
+  elif [[ -d "$target" ]]; then
+    depth=("-maxdepth" "1")
+    [[ $RECURSIVE -eq 1 ]] && depth=()
+
+    while IFS= read -r -d '' f; do
+      process "$f"
+    done < <(find "$target" "${depth[@]}" -type f ! -type l -print0 2>/dev/null)
+  fi
+done
+
+[[ $DRY_RUN -eq 1 ]] && printf "\n=== End dry-run ===\n"

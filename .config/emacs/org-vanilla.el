@@ -3,7 +3,7 @@
 (require 'org)
 
 ;; Basic org settings
-(setq org-startup-indented t
+(setq org-startup-indented nil
       org-pretty-entities t
       org-hide-emphasis-markers t
       org-startup-with-inline-images t

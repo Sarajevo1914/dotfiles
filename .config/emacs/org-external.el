@@ -3,8 +3,8 @@
 ;; org-modern
 (use-package org-modern
   :after org
-  :hook ((org-mode . org-modern-mode)
-         (org-agenda-finalize . org-modern-agenda))
+  ;; :hook ((org-mode . org-modern-mode)
+  ;;        (org-agenda-finalize . org-modern-agenda))
   :config
   ;; Disable some elements for a cleaner look
   (setq org-modern-keyword nil

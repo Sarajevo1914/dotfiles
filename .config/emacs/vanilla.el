@@ -65,7 +65,7 @@
 ;; (set-face-attribute 'default nil
 ;;                     :font "Iosevka Nerd Font"
 ;;                     :height 160) ;; 160 = 16pt
-(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-14"))
+(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-12"))
 
 ;; Some Keys
 (global-set-key (kbd "M-u") 'upcase-dwim)

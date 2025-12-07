@@ -176,5 +176,12 @@
   :config
   (setq rfc-mode-directory (expand-file-name "~/.rfc/")))
 
+;; xclip
+(unless (display-graphic-p)
+  (use-package xclip
+    :ensure t
+    :config
+    (xclip-mode 1)))
+
 (provide 'external-pkg)
 ;;; external-pkg.el ends here

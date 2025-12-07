@@ -95,13 +95,6 @@
   :config
   (which-key-mode 1))
 
-;; Orderless
-(use-package orderless
-  :demand t
-  :config
-  (setq completion-styles '(orderless basic)
-        completion-category-overrides '((file (styles basic partial-completion)))))
-
 ;; Rainbow-delimiters
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))

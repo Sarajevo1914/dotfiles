@@ -25,6 +25,10 @@
 
 (make-directory my-emacs-trash-dir t) ; Create if not exist
 
+;; Set auto-gen conf file
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file :no-error-if-file-is-missing)
+
 ;; Save TRAMP files in trash
 (setq tramp-persistency-file-name
       (concat my-emacs-trash-dir "tramp"))

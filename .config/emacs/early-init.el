@@ -2,10 +2,31 @@
 
 (profiler-start 'cpu+mem)
 
+(menu-bar-mode -1)   ; Disable menu bar
+(tool-bar-mode -1)   ; Disable tool bar
+(scroll-bar-mode -1) ; Disable scroll bar
+
+;; Font
+(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-12"))
+
+(setq
+ inhibit-startup-message t   ; Disable splash screen
+ initial-scratch-message nil ; Empty scratch buffer
+ frame-inhibit-implied-resize t
+ )
+
+;; Disable package.el
+(setq package-enable-at-startup nil)
+
 ;; Pause GC
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold most-positive-fixnum
+;      gc-cons-percentage 0.6
+      )
 
 ;; Restore GC after boot
 (add-hook 'emacs-startup-hook
-          (lambda () (setq gc-cons-threshold (* 50 1024 1024))))
+          (lambda () (setq gc-cons-threshold (* 50 1024 1024)
+;                           gc-cons-percentage 0.1
+                           )))
+
 ;;; early-init.el ends here

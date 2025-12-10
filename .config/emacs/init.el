@@ -2,19 +2,16 @@
 
 ;; General settings
 (setq
- inhibit-startup-message t                        ; Disable splash screen
- initial-scratch-message nil                      ; Empty scratch buffer
  delete-by-moving-to-trash t                      ; Use system trash on delete
  make-backup-files t                              ; Enable backups
  backup-by-copying t                              ; Copy files for backup (safer for symlinks)
-
  load-prefer-newer t                              ; Prefer newer versions of files
  apropos-do-all t                                 ; Show all results in apropos
  mouse-yank-at-point t                            ; Yank at point, not click location
  read-file-name-completion-ignore-case t          ; Ignore case in file name completion
  read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
  vc-follow-symlinks t                             ; Follow symlinks without confirmation
- size-indication-mode t                           ; Show file size in mode line
+
  browse-url-browser-function 'browse-url-firefox  ; Open URL links using firefox
  my-emacs-trash-dir "~/.cache/emacs/"             ; Set trash dir
  backup-directory-alist `((".*" . ,my-emacs-trash-dir))           ; Backups files
@@ -42,12 +39,10 @@
  require-final-newline t         ; Add newline at end of file on save
  )
 
-;; UI Tweaks
-(menu-bar-mode -1)   ; Disable menu bar
-(tool-bar-mode -1)   ; Disable tool bar
-(scroll-bar-mode -1) ; Disable scroll bar
-(line-number-mode 1) ; Enable line numbers in mode line
-(column-number-mode 1)
+;; Mode Line
+(line-number-mode 1)     ; Enable line numbers in mode line
+(column-number-mode 1)   ; Enable collumn number in mode line
+(size-indication-mode 1) ; Show file size in mode line
 
 ;; Behavior
 (global-visual-line-mode 1)  ; Soft-wrap lines
@@ -66,8 +61,6 @@
 (setq display-line-numbers-type 'relative)  ; Relative line numbers
 (global-display-line-numbers-mode 1)
 
-;; Font
-(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-12"))
 
 ;; Replace keysbiding
 (global-set-key (kbd "M-u") 'upcase-dwim)

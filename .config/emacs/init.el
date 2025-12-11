@@ -41,7 +41,7 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;; updated org
+;; Update org
 (elpaca org)
 (elpaca-wait)
 
@@ -51,6 +51,13 @@
 (elpaca-wait)
 
 ;;; End of elpaca installer
+
+;; Use-package
+(setq
+ use-package-always-defer t
+ use-package-always-ensure t
+ use-package-expand-minimally nill
+ )
 
 ;; General settings
 (setq
@@ -63,14 +70,13 @@
  read-file-name-completion-ignore-case t          ; Ignore case in file name completion
  read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
  vc-follow-symlinks t                             ; Follow symlinks without confirmation
-
  browse-url-browser-function 'browse-url-firefox  ; Open URL links using firefox
  my-emacs-trash-dir "~/.cache/emacs/"             ; Set trash dir
  backup-directory-alist `((".*" . ,my-emacs-trash-dir))           ; Backups files
  auto-save-file-name-transforms `((".*" ,my-emacs-trash-dir t))   ; Auto-save files
  auto-save-list-file-prefix (concat my-emacs-trash-dir ".saves-") ; Auto-save crash recovery
  lock-file-name-transforms `((".*" ,my-emacs-trash-dir))          ; Lockfiles
-)
+ )
 
 (make-directory my-emacs-trash-dir t) ; Create if not exist
 
@@ -113,7 +119,6 @@
 (setq display-line-numbers-type 'relative)  ; Relative line numbers
 (global-display-line-numbers-mode 1)
 
-
 ;; Replace keysbiding
 (global-set-key (kbd "M-u") 'upcase-dwim)
 (global-set-key (kbd "M-l") 'downcase-dwim)
@@ -134,11 +139,7 @@
 ;; Dired
 (add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto-refresh dired buffers
 
-;; Defer gnus
-(use-package gnus
-  :defer t)
-
-;; Whitespace
+;; Whitespace TODO
 
 ;; Delete trailing whitespace on save
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
@@ -150,5 +151,10 @@
             (when (profiler-running-p)
               (profiler-stop)
               (profiler-report))))
+
+;;; EXTERNAL PKGs
+
+;; Themes
+(use-package gruvbox-theme)
 
 ;;; init.el ends here

@@ -56,7 +56,7 @@
 (setq
  use-package-always-defer t
  use-package-always-ensure t
- use-package-expand-minimally nill
+ use-package-expand-minimally nil
  )
 
 ;; General settings

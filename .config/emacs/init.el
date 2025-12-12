@@ -144,6 +144,222 @@
 ;; Delete trailing whitespace on save
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
+;; Which-key
+(use-package which-key
+  :demand t
+  :config
+  (which-key-mode 1))
+
+;;; EXTERNAL PKGs
+
+;; Themes
+(use-package gruvbox-theme)
+(use-package standard-themes)
+
+;; Vertico
+(use-package vertico
+  :demand t
+  :config
+  (vertico-mode)
+  (setq vertico-cycle t
+        vertico-resize nil
+        vertico-count 15))
+
+;; Marginalia
+(use-package marginalia
+  :demand t
+  :config
+  (marginalia-mode 1))
+
+;; Consult
+(use-package consult)
+
+;; Embark
+(use-package embark
+  :bind (("C-." . embark-act)
+         ("M-." . embark-dwim)
+         ("C-h B" . embark-bindings))
+  :config
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+;; Embark-consult
+(use-package embark-consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+;; Avy
+(use-package avy
+  :bind (("C-'" . avy-goto-char)
+         ("C-c j" . avy-goto-line)))
+
+;; Transient for magit
+(use-package transient)
+
+;; Magit
+(use-package magit)
+
+;; Wgrep
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
+
+;; Markdown
+(use-package markdown-mode
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :config
+  (setq markdown-command "pandoc"
+        markdown-fontify-code-blocks-natively t))
+
+;; RFC
+(use-package rfc-mode
+  :config
+  (setq rfc-mode-directory (expand-file-name "~/.rfc/")))
+
+;; xclip
+(unless (display-graphic-p)
+  (use-package xclip
+    :config
+    (xclip-mode 1)))
+
+;; Multiple-cursors
+;; Read docs https://github.com/magnars/multiple-cursors.el
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-\""        . mc/skip-to-next-like-this)
+         ("C-:"         . mc/skip-to-previous-like-this)))
+
+;; Rainbow-delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Colorful-mode
+(use-package colorful-mode
+  :hook prog-mode
+  :config
+  (setq colorful-use-prefix t
+        colorful-only-strings 'only-prog
+        css-fontify-colors nil)
+  (global-colorful-mode t))
+
+;; Undo-tree
+(use-package undo-tree
+  :config
+  (setq undo-tree-history-directory-alist
+        `(("." . ,my-emacs-trash-dir))
+        undo-tree-auto-save-history t)
+  (global-undo-tree-mode))
+
+;; Move-text
+(use-package move-text
+  :demand t
+  :config
+  (move-text-default-bindings)
+  :bind (("M-p" . move-text-up)
+         ("M-n" . move-text-down)))
+
+;;; ORG
+
+;; Basic org settings
+(setq org-startup-indented nil
+      org-pretty-entities t
+      org-hide-emphasis-markers t
+      org-startup-with-inline-images t
+      org-image-actual-width '(300)
+      org-log-done 'time
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t
+      org-confirm-babel-evaluate nil
+      org-edit-src-content-indentation 0)
+
+;; Enable babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (shell . t)))
+
+;; Keybindings
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'org-capture)
+
+;; org-modern
+(use-package org-modern
+  :after org
+  ;; :hook ((org-mode . org-modern-mode)
+  ;;        (org-agenda-finalize . org-modern-agenda))
+  :config
+  ;; Disable some elements for a cleaner look
+  (setq org-modern-keyword nil
+        org-modern-checkbox nil
+        org-modern-table nil))
+
+;; org-auto-tangle
+(use-package org-auto-tangle
+  :after org
+  :config
+  ;; Only tangle files with #+auto_tangle: t header
+  (setq org-auto-tangle-default nil))
+
+;; org-roam
+(use-package org-roam
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory (file-truename "~/roam"))
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)   ;; Toggle backlinks buffer
+         ("C-c n f" . org-roam-node-find)       ;; Search/create a note
+         ("C-c n i" . org-roam-node-insert)     ;; Create link to a note (creates it if not exists)
+         ("C-c n c" . org-roam-capture)         ;; Quick capture
+         ("C-c n e" . org-roam-extract-subtree) ;; Extract subtree into new note
+         )
+  :config
+  (org-roam-db-autosync-mode 1))
+
+;; Custom defuns for ORG
+(defun user/org-roam-convert-file (file)
+  "Convert FILE into an org-roam note by adding missing title, heading, and ID."
+  (with-current-buffer (find-file-noselect file)
+    ;; Add #+title:
+    (goto-char (point-min))
+    (unless (re-search-forward "^#\\+title:" nil t)
+      (goto-char (point-min))
+      (insert "#+title: " (file-name-base file) "\n\n"))
+
+    ;; Ensure heading
+    (goto-char (point-min))
+    (unless (re-search-forward "^\\* " nil t)
+      (goto-char (point-min))
+      (insert "* " (file-name-base file) "\n"))
+
+    ;; Add ID inside heading
+    (goto-char (point-min))
+    (re-search-forward "^\\* " nil t)
+    (org-id-get-create)
+
+    (save-buffer)
+    (kill-buffer)))
+
+(defun user/org-roam-convert-directory (dir)
+  "Convert all .org files in DIR into org-roam nodes.
+Skips .git/, archive files, and files that already have an ID."
+  (interactive "DDirectory: ")
+  (dolist (file (directory-files-recursively dir "\\.org$"))
+    (unless (or
+             (string-match-p "\\.git/" file)
+             (string-match-p "archive\\.org$" file)
+             (string-match-p "README\\.org$" file)
+             (with-temp-buffer
+               (insert-file-contents file)
+               (goto-char (point-min))
+               (re-search-forward "^:ID:" nil t)))
+      (user/org-roam-convert-file file)))
+  (message "Finished converting notes to org-roam format."))
+
 ;; Load time
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -151,10 +367,4 @@
             (when (profiler-running-p)
               (profiler-stop)
               (profiler-report))))
-
-;;; EXTERNAL PKGs
-
-;; Themes
-(use-package gruvbox-theme)
-
 ;;; init.el ends here

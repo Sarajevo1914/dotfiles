@@ -154,7 +154,6 @@
 
 ;; Themes
 (use-package gruvbox-theme)
-(use-package standard-themes)
 
 ;; Vertico
 (use-package vertico

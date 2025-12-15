@@ -367,10 +367,10 @@ Skips .git/, archive files, and files that already have an ID."
   (message "Finished converting notes to org-roam format."))
 
 ;; Load time
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs loaded in %s" (emacs-init-time))
-            (when (profiler-running-p)
-              (profiler-stop)
-              (profiler-report))))
+;; (add-hook 'emacs-startup-hook
+;;           (lambda ()
+;;             (message "Emacs loaded in %s" (emacs-init-time))
+;;             (when (profiler-running-p)
+;;               (profiler-stop)
+;;               (profiler-report))))
 ;;; init.el ends here

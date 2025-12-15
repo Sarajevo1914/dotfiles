@@ -1,6 +1,6 @@
 ;;; early-init.el --- Early-init Emacs configuration -*- lexical-binding: t; -*-
 
-(profiler-start 'cpu+mem)
+;;(profiler-start 'cpu+mem)
 
 (menu-bar-mode -1)   ; Disable menu bar
 (tool-bar-mode -1)   ; Disable tool bar

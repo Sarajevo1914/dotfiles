@@ -1,5 +1,7 @@
 ;;; init.el --- Vanilla Emacs configuration -*- lexical-binding: t; -*-
 
+(load (expand-file-name "performance.el" user-emacs-directory) nil t)
+
 ;;; Start of elpaca installer
 
 (defvar elpaca-installer-version 0.11)

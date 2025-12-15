@@ -52,26 +52,26 @@
 
 ;;; End of elpaca installer
 
-;; Use-package
+;;; Use-package
 (setq
  use-package-always-defer t
  use-package-always-ensure t
- use-package-expand-minimally nil
+ use-package-expand-minimally t
  )
 
-;; General settings
+;;; General and internals settings
 (setq
- delete-by-moving-to-trash t                      ; Use system trash on delete
- make-backup-files t                              ; Enable backups
- backup-by-copying t                              ; Copy files for backup (safer for symlinks)
- load-prefer-newer t                              ; Prefer newer versions of files
- apropos-do-all t                                 ; Show all results in apropos
- mouse-yank-at-point t                            ; Yank at point, not click location
- read-file-name-completion-ignore-case t          ; Ignore case in file name completion
- read-buffer-completion-ignore-case t             ; Ignore case in buffer name completion
- vc-follow-symlinks t                             ; Follow symlinks without confirmation
- browse-url-browser-function 'browse-url-firefox  ; Open URL links using firefox
- my-emacs-trash-dir "~/.cache/emacs/"             ; Set trash dir
+ delete-by-moving-to-trash t                                      ; Use system trash on delete
+ make-backup-files t                                              ; Enable backups
+ backup-by-copying t                                              ; Copy files for backup (safer for symlinks)
+ load-prefer-newer t                                              ; Prefer newer versions of files
+ apropos-do-all t                                                 ; Show all results in apropos
+ mouse-yank-at-point t                                            ; Yank at point, not click location
+ read-file-name-completion-ignore-case t                          ; Ignore case in file name completion
+ read-buffer-completion-ignore-case t                             ; Ignore case in buffer name completion
+ vc-follow-symlinks t                                             ; Follow symlinks without confirmation
+ browse-url-browser-function 'browse-url-firefox                  ; Open URL links using firefox
+ my-emacs-trash-dir "~/.cache/emacs/"                             ; Set trash dir
  backup-directory-alist `((".*" . ,my-emacs-trash-dir))           ; Backups files
  auto-save-file-name-transforms `((".*" ,my-emacs-trash-dir t))   ; Auto-save files
  auto-save-list-file-prefix (concat my-emacs-trash-dir ".saves-") ; Auto-save crash recovery
@@ -98,9 +98,9 @@
  )
 
 ;; Mode Line
-(line-number-mode 1)     ; Enable line numbers in mode line
-(column-number-mode 1)   ; Enable collumn number in mode line
-(size-indication-mode 1) ; Show file size in mode line
+(line-number-mode 1)             ; Enable line numbers in mode line
+(column-number-mode 1)           ; Enable collumn number in mode line
+(size-indication-mode 1)         ; Show file size in mode line
 
 ;; Behavior
 (global-visual-line-mode 1)  ; Soft-wrap lines
@@ -110,10 +110,13 @@
 (delete-selection-mode 1)    ; Replace selection when typing
 
 ;; Parentheses and delimiters
-(show-paren-mode 1)            ; Highlight matching parentheses
-(setq show-paren-delay 0)
-(setq show-paren-style 'mixed)
-(electric-pair-mode 1)         ; Automatically insert closing delimiters
+(setq
+ show-paren-delay 0
+ show-paren-style 'mixed
+ )
+
+(show-paren-mode 1)          ; Highlight matching parentheses
+(electric-pair-mode 1)       ; Automatically insert closing delimiters
 
 ;; Line numbers
 (setq display-line-numbers-type 'relative)  ; Relative line numbers
@@ -151,9 +154,6 @@
   (which-key-mode 1))
 
 ;;; EXTERNAL PKGs
-
-;; Themes
-(use-package gruvbox-theme)
 
 ;; Vertico
 (use-package vertico
@@ -217,8 +217,7 @@
 ;; xclip
 (unless (display-graphic-p)
   (use-package xclip
-    :config
-    (xclip-mode 1)))
+    :hook (after-init . xclip-mode)))
 
 ;; Multiple-cursors
 ;; Read docs https://github.com/magnars/multiple-cursors.el
@@ -236,15 +235,15 @@
 
 ;; Colorful-mode
 (use-package colorful-mode
-  :hook prog-mode
+  :hook (prog-mode . colorful-mode)
   :config
   (setq colorful-use-prefix t
-        colorful-only-strings 'only-prog
-        css-fontify-colors nil)
-  (global-colorful-mode t))
+        colorful-only-strings t
+        css-fontify-colors nil))
 
 ;; Undo-tree
 (use-package undo-tree
+  :demand t
   :config
   (setq undo-tree-history-directory-alist
         `(("." . ,my-emacs-trash-dir))
@@ -261,29 +260,33 @@
 
 ;;; ORG
 
-;; Basic org settings
-(setq org-startup-indented nil
-      org-pretty-entities t
-      org-hide-emphasis-markers t
-      org-startup-with-inline-images t
-      org-image-actual-width '(300)
-      org-log-done 'time
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-confirm-babel-evaluate nil
-      org-edit-src-content-indentation 0)
+;; org vanilla
+(use-package org
+  :ensure nil
+  :mode ("\\.org\\'" . org-mode)
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
+  :config
+  (setq
+   org-startup-indented nil
+   org-pretty-entities t
+   org-hide-emphasis-markers t
+   org-startup-with-inline-images t
+   org-image-actual-width '(300)
+   org-log-done 'time
+   org-src-fontify-natively t
+   org-src-tab-acts-natively t
+   org-confirm-babel-evaluate nil
+   org-edit-src-content-indentation 0
+   )
 
-;; Enable babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)
-   (shell . t)))
-
-;; Keybindings
-(global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c c") #'org-capture)
+  ;; Babel - SOLO cuando usas Org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t))))
 
 ;; org-modern
 (use-package org-modern
@@ -292,9 +295,11 @@
   ;;        (org-agenda-finalize . org-modern-agenda))
   :config
   ;; Disable some elements for a cleaner look
-  (setq org-modern-keyword nil
-        org-modern-checkbox nil
-        org-modern-table nil))
+  (setq
+   org-modern-keyword nil
+   org-modern-checkbox nil
+   org-modern-table nil
+   ))
 
 ;; org-auto-tangle
 (use-package org-auto-tangle

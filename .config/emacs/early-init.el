@@ -15,15 +15,10 @@
  inhibit-startup-message t   ; Disable splash screen
  initial-scratch-message nil ; Empty scratch buffer
  frame-inhibit-implied-resize t
+ package-enable-at-startup nil ; Disable package.el
+ gc-cons-threshold most-positive-fixnum
+; gc-cons-percentage 0.6
  )
-
-;; Disable package.el
-(setq package-enable-at-startup nil)
-
-;; Pause GC
-(setq gc-cons-threshold most-positive-fixnum
-;      gc-cons-percentage 0.6
-      )
 
 ;; Restore GC after boot
 (add-hook 'emacs-startup-hook

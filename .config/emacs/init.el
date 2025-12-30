@@ -199,6 +199,13 @@
   :bind (("C-'" . avy-goto-char)
          ("C-c j" . avy-goto-line)))
 
+;; Orderless
+(use-package orderless
+  :demand t
+  :config
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles basic partial-completion)))))
+
 ;; Transient for magit
 (use-package transient)
 

@@ -76,6 +76,13 @@
  my-emacs-trash-dir "~/.cache/emacs/"                             ; Set trash dir
  backup-directory-alist `((".*" . ,my-emacs-trash-dir))           ; Backups files
  auto-save-file-name-transforms `((".*" ,my-emacs-trash-dir t))   ; Auto-save files
+ auto-save-default t                                              ; Enable auto-save
+ auto-save-interval 100                                           ; Save every n events
+ auto-save-timeout 15                                             ; Auto-save every n seconds
+ version-control t                                                ; Enable version-control
+ kept-old-versions 5                                              ; Keep n old versions
+ kept-new-versions 10                                             ; Keep n new versions
+ delete-old-versions t                                            ; Delete old versions
  auto-save-list-file-prefix (concat my-emacs-trash-dir ".saves-") ; Auto-save crash recovery
  lock-file-name-transforms `((".*" ,my-emacs-trash-dir))          ; Lockfiles
  )

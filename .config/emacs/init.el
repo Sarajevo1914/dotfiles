@@ -135,7 +135,6 @@
 (global-set-key (kbd "M-u") 'upcase-dwim)
 (global-set-key (kbd "M-l") 'downcase-dwim)
 (global-set-key (kbd "M-c") 'capitalize-dwim)
-(global-set-key (kbd "C-c t") #'toggle-case)
 
 ;; Tree-sitter (built-in integration)
 (setq treesit-extra-load-path '("/usr/lib"))
@@ -344,46 +343,6 @@
          )
   :config
   (org-roam-db-autosync-mode 1))
-
-;; Custom defuns for ORG
-(defun user/org-roam-convert-file (file)
-  "Convert FILE into an org-roam note by adding missing title, heading, and ID."
-  (with-current-buffer (find-file-noselect file)
-    ;; Add #+title:
-    (goto-char (point-min))
-    (unless (re-search-forward "^#\\+title:" nil t)
-      (goto-char (point-min))
-      (insert "#+title: " (file-name-base file) "\n\n"))
-
-    ;; Ensure heading
-    (goto-char (point-min))
-    (unless (re-search-forward "^\\* " nil t)
-      (goto-char (point-min))
-      (insert "* " (file-name-base file) "\n"))
-
-    ;; Add ID inside heading
-    (goto-char (point-min))
-    (re-search-forward "^\\* " nil t)
-    (org-id-get-create)
-
-    (save-buffer)
-    (kill-buffer)))
-
-(defun user/org-roam-convert-directory (dir)
-  "Convert all .org files in DIR into org-roam nodes.
-Skips .git/, archive files, and files that already have an ID."
-  (interactive "DDirectory: ")
-  (dolist (file (directory-files-recursively dir "\\.org$"))
-    (unless (or
-             (string-match-p "\\.git/" file)
-             (string-match-p "archive\\.org$" file)
-             (string-match-p "README\\.org$" file)
-             (with-temp-buffer
-               (insert-file-contents file)
-               (goto-char (point-min))
-               (re-search-forward "^:ID:" nil t)))
-      (user/org-roam-convert-file file)))
-  (message "Finished converting notes to org-roam format."))
 
 ;; Load time
 ;; (add-hook 'emacs-startup-hook

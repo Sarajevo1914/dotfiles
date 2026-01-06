@@ -149,7 +149,12 @@
         (javascript-mode . js-ts-mode)))
 
 ;; Dired
-(add-hook 'dired-mode-hook 'auto-revert-mode) ; Auto-refresh dired buffers
+;; TODO change ls output
+(use-package dired
+  :ensure nil
+  :hook
+  ((dired-mode . auto-revert-mode)
+   (dired-mode . hl-line-mode)))
 
 ;; Whitespace TODO
 

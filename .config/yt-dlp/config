@@ -1,0 +1,14 @@
+--remote-components ejs:github
+--ignore-errors
+--embed-metadata
+--merge-output-format mkv
+
+--retries 3
+--fragment-retries 3
+--concurrent-fragments 1
+
+# Continue partial downloads
+--continue
+
+# Prefer native HLS/DASH handling
+--hls-prefer-native

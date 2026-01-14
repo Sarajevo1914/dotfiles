@@ -18,8 +18,11 @@ smart_borders no_gaps
 #   }
 #
 
+titlebar_padding 1 1
+
 bar {
     position bottom
     status_command ~/.config/sway/bar.sh
     font pango:DejaVu Sans 10
+    height 18
 }

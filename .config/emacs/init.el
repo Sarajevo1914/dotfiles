@@ -85,6 +85,7 @@
  delete-old-versions t                                            ; Delete old versions
  auto-save-list-file-prefix (concat my-emacs-trash-dir ".saves-") ; Auto-save crash recovery
  lock-file-name-transforms `((".*" ,my-emacs-trash-dir))          ; Lockfiles
+ completion-ignore-casecompletion-ignore-case t
  )
 
 (make-directory my-emacs-trash-dir t) ; Create if not exist

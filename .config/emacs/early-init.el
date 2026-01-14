@@ -18,6 +18,8 @@
  package-enable-at-startup nil ; Disable package.el
  gc-cons-threshold most-positive-fixnum
 ; gc-cons-percentage 0.6
+ window-resize-pixelwise t
+ frame-resize-pixelwise t
  )
 
 ;; Restore GC after boot

@@ -1,7 +1,9 @@
 #!/bin/sh
 
-if [ -t 0 ]; then
-    exec emacsclient -nw -a ""
-else
+if [ -n "$WAYLAND_DISPLAY" ] && [ -z "$SSH_CONNECTION" ]; then
     exec emacsclient -c -a ""
+elif [ -n "$DISPLAY" ] && [ -z "$SSH_CONNECTION" ]; then
+    exec emacsclient -c -a ""
+else
+    exec emacsclient -nw -a ""
 fi

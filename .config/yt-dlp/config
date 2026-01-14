@@ -1,14 +1,44 @@
+# js
+
 --remote-components ejs:github
+
+# Basic
+
 --ignore-errors
---embed-metadata
+--continue
+
+# Format
+
+-f bv*+ba/b
+
 --merge-output-format mkv
+--remux-video mkv
+
+# Subs
+
+--write-auto-subs
+--embed-subs
+--convert-subs ass
+--compat-options no-keep-subs
+
+# Metadata
+
+--add-metadata
+--embed-metadata
+--embed-thumbnail
+
+# Network
+
+--cookies-from-browser firefox
 
 --retries 3
---fragment-retries 3
---concurrent-fragments 1
+--fragment-retries 10
+--retry-sleep 3
 
-# Continue partial downloads
---continue
+--sleep-interval 2
+--max-sleep-interval 5
+
+--concurrent-fragments 2
 
 # Prefer native HLS/DASH handling
 --hls-prefer-native

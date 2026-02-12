@@ -7,7 +7,7 @@
 (scroll-bar-mode -1) ; Disable scroll bar
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-10"))
+(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono-13"))
 
 (load-theme 'wombat)
 

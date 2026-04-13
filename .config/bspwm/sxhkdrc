@@ -57,8 +57,8 @@ super + bracket{left,right}
 super + {g,semicolon}
   bspc desktop -f {prev,next}.local
 
-alt + {j,k}
-  bspc desktop -f {prev,next}.local
+# alt + {j,k}
+#   bspc desktop -f {prev,next}.local
 
 # SEND TO ADJACENT DESKTOP
 super + shift + bracket{left,right}
@@ -67,8 +67,8 @@ super + shift + bracket{left,right}
 super + shift + {g,semicolon}
   bspc node -d {prev,next}.local
 
-alt + shift + {j,k}
-  bspc node -d {prev,next}.local
+# alt + shift + {j,k}
+#   bspc node -d {prev,next}.local
 
 # FOCUS LAST DESKTOP IN CURRENT MONITOR
 super + Tab

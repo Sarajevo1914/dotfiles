@@ -1,2 +1,2 @@
 #!/bin/sh
-exec swaylock -c 002b36
+exec swaylock -c 002b36 &

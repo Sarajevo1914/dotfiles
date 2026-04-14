@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# TODO
 # zoxide maybe is to cost to performance
-# req trash-cli ouch
+# req trash-cli
 # wl-copy for wayland
 # xclip for x11
 
@@ -47,54 +46,18 @@ set cleaner ctpvclear
 # cmd on-quit $stpvimg --end $id
 
 # cmd/funcions
-#cmd bulkrename $vidir
 
 cmd open &{{
-    case $(file --mime-type -Lb $f) in
-        text/*) lf -remote "send $id \$$EDITOR \$fx";;
-        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
-    esac
-}}
-
-# luke smith script
-# cmd extract ${{
-#     clear; tput cup $(($(tput lines)/3)); tput bold
-#     set -f
-#     printf "%s\n\t" "$fx"
-#     printf "extract?[y/N]"
-#     read ans
-#     [ $ans = "y" ] && {
-#         case $fx in
-#             *.tar.bz2)   tar xjf $fx     ;;
-#             *.tar.gz)    tar xzf $fx     ;;
-#             *.bz2)       bunzip2 $fx     ;;
-#             *.rar)       unrar e $fx     ;;
-#             *.gz)        gunzip $fx      ;;
-#             *.tar)       tar xf $fx      ;;
-#             *.tbz2)      tar xjf $fx     ;;
-#             *.tgz)       tar xzf $fx     ;;
-#             *.zip)       unzip $fx       ;;
-#             *.Z)         uncompress $fx  ;;
-#             *.7z)        7z x $fx        ;;
-#             *.tar.xz)    tar xf $fx      ;;
-#         esac
-#     }
-# }}
-
-cmd extract ${{
-    clear
-    tput cup $(($(tput lines)/3))
-    set -f
-    printf "%s\n\t" "$fx"
-    printf "extract? [y/N] "
-    read ans
-    case $ans in
-        [Yy]*)
-            for file in $fx; do
-                ouch decompress "$file" && echo "Extracted: $file"
-            done
-            ;;
-    esac
+    for file in $fx; do
+        case $(file --mime-type -Lb "$file") in
+            text/*)
+                lf -remote "send $id \$EDITOR \"$file\""
+                ;;
+            *)
+                ${OPENER:-xdg-open} "$file" >/dev/null 2>&1 &
+                ;;
+        esac
+    done
 }}
 
 cmd mkdir ${{
@@ -107,59 +70,69 @@ cmd mkdir ${{
 cmd delete ${{
     clear
     tput cup $(($(tput lines)/3))
-    set -f
     printf "Delete files:\n"
-    printf "%s\n" $fx
+    printf "%s\n" "$fx"
     printf "\nConfirm deletion? [y/N] "
     read -r ans
     case $ans in
         [Yy]*)
             if command -v trash-put >/dev/null 2>&1; then
                 trash-put -- $fx
-                echo "Files moved to trash"
+                lf -remote "send $id echo 'Files moved to trash'"
             else
-                echo "trash-cli not found, permanently delete?"
-                printf "\nConfirm deletion? [y/N] "
+                printf "trash-cli not found, permanently delete? [y/N] "
                 read -r confirm
                 case $confirm in
                     [Yy]*)
-                        rm -rf -- $fx
-                        echo "Files permanently deleted"
+                        [ -n "$fx" ] && rm -rf -- $fx
+                        lf -remote "send $id echo 'Files permanently deleted'"
                         ;;
-                    *) echo "Aborted";;
+                    *) lf -remote "send $id echo 'Aborted'";;
                 esac
             fi
             ;;
-        *) echo "Aborted";;
+        *) lf -remote "send $id echo 'Aborted'";;
     esac
 }}
 
 cmd copy-name ${{
-    basename -a -- $fx | if command -v wl-copy >/dev/null 2>&1; then
-        wl-copy
-    elif command -v xclip >/dev/null 2>&1; then
-        xclip -selection clipboard
+    names=$(basename -a -- $fx)
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+        printf '%s' "$names" | wl-copy
+    elif [ -n "${DISPLAY:-}" ]; then
+        printf '%s' "$names" | xclip -selection clipboard
     else
-        echo "copy-name No clipboard manager found"
+        lf -remote "send $id echoerr 'No clipboard manager found'"
     fi
 }}
 
 cmd copy-path ${{
-    realpath -- $fx | if command -v wl-copy >/dev/null 2>&1; then
-        wl-copy
-    elif command -v xclip >/dev/null 2>&1; then
-        xclip -selection clipboard
+    paths=$(realpath -- $fx)
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+        printf '%s' "$paths" | wl-copy
+    elif [ -n "${DISPLAY:-}" ]; then
+        printf '%s' "$paths" | xclip -selection clipboard
     else
-        echo "copy-path No clipboard manager found"
+        lf -remote "send $id echoerr 'No clipboard manager found'"
     fi
 }}
 
-cmd on-select &{{
-                   lf -remote "send $id set statfmt \"$(eza -lbdg --total-size --time-style long-iso --color=always "$f")\""
+# Opt back into the statfmt/rulerfmt system (required in r41+)
+set rulerfmt "%a|%p| \033[7;31m %m \033[0m| \033[7;33m %c \033[0m| \033[7;35m %s \033[0m| \033[7;34m %f \033[0m| %i/%t"
 
-                   if command -v zoxide >/dev/null 2>&1; then
-                      zoxide add "$PWD"
-                   fi
+cmd on-select &{{
+    if command -v eza >/dev/null 2>&1; then
+        info=$(eza -lbdg --time-style long-iso --color=always "$f")
+        lf -remote "send $id set statfmt \"$info\""
+        if [ -d "$f" ]; then
+            info=$(eza -lbdg --total-size --time-style long-iso --color=always "$f")
+            lf -remote "send $id set statfmt \"$info\""
+        fi
+    else
+        info=$(ls -ld "$f")
+        lf -remote "send $id set statfmt \"$info\""
+    fi
+    command -v zoxide >/dev/null 2>&1 && zoxide add "$PWD"
 }}
 
 # Keybidings
@@ -244,15 +217,13 @@ map sc :set sortby ctime; set info ctime
 map se :set sortby ext; set info
 
 # Rename
-map c push A<c-u>          # New rename
-map A :rename; cmd-end     # At very end
-map a :rename; cmd-right   # After extension
-map I :rename; cmd-home    # At very beginning
-map i :rename              # Before extension
-#map B bulkrename           # Bulk rename with vidir
-
-# example
-# III-beginning-iii-before-extension.aaa-after-extension-AAA-at-very-end
+map r                                    # unmap default
+map i rename                             # before extension  ← default lf behavior
+map I :rename; cmd-home                  # at very beginning
+map A :rename; cmd-end                   # at very end
+map a :rename; cmd-right                 # after extension
+map c :rename; cmd-end; cmd-delete-home  # new name
+map e :rename; cmd-delete-home           # delete name and leave extension
 
 # Unmaping default keybidings
 map H

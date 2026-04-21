@@ -56,3 +56,47 @@ sway jq
 ```
 papirus-icon-theme materia-gtk-theme adwaita-qt5-git qt5ct qt6ct qt5-wayland qt6-wayland nwg-look ttf-aporetic
 ```
+
+# Install Dotfiles
+
+From archinstall ISO media, change root using user account:
+
+```sh
+chroot-arch /mnt su -- user
+```
+
+Or from a booted OS after install:
+```sh
+rm -rf * .*
+sudo pacman -Syu git rsync base-devel --needed
+git clone https://github.com/sarajevo1914/dotfiles
+rsync -av /home/user/dotfiles/ /home/user/
+```
+
+If you want to exclude some git-related files:
+```sh
+rsync -aHv --exclude ".git" --exclude "README*" /home/user/dotfiles/ /home/user/
+```
+
+If needed, change all file ownership from root to user.
+
+```sh
+chown -R user:user /home/user
+```
+
+To use Ly DM
+
+```sh
+systemctl disable getty@tty2.service
+systemctl enable ly@tty2.service
+```
+
+To start bspwm without any DM, edit `~/.xinitrc`:
+```sh
+exec bspwm
+```
+
+Then run:
+```sh
+startx
+```

@@ -43,8 +43,12 @@ export GTK_CSD=0
 # Man Pager
 # Bat error with mandoc
 # https://github.com/sharkdp/bat/issues/1145
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export MANROFFOPT="-c"
+if command -v bat &>/dev/null; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+  export MANROFFOPT="-c"
+else
+  unset MANPAGER  # deja que man use less por defecto
+fi
 
 # Nvim
 # export MANPAGER="nvim -c 'set ft=man' -"

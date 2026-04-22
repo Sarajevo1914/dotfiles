@@ -27,6 +27,7 @@ alias \
  hblock-none='hblock -S none -D none'
 
 # eza
+if command -v eza >/dev/null; then
 alias \
  ls="eza --group-directories-first --icons" \
  lsl="eza --group-directories-first --icons -l" \
@@ -35,6 +36,7 @@ alias \
  llb="eza -labg --group-directories-first --total-size --time-style long-iso --icons -B" \
  lls="eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons" \
  llsb="eza -glabrs size --group-directories-first --total-size --time-style long-iso --icons -B"
+fi
 
 # These common commands are just too long! Abbreviate them
 alias \

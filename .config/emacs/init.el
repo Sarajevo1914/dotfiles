@@ -4,15 +4,15 @@
 
 ;;; Start of elpaca installer
 
-(defvar elpaca-installer-version 0.11)
+(defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+                              :build (:not elpaca-activate)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
        (default-directory repo))
@@ -137,16 +137,41 @@
 (global-set-key (kbd "M-l") 'downcase-dwim)
 (global-set-key (kbd "M-c") 'capitalize-dwim)
 
-;; Tree-sitter (built-in integration)
-(setq treesit-extra-load-path '("/usr/lib"))
+;; Tree-sitter (not use system)
+(setq treesit-extra-load-path nil)
+
+;; Tree-sitter sources
+(setq treesit-language-source-alist
+      '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
+        (c          "https://github.com/tree-sitter/tree-sitter-c")
+        (cpp        "https://github.com/tree-sitter/tree-sitter-cpp")
+        (css        "https://github.com/tree-sitter/tree-sitter-css")
+        (html       "https://github.com/tree-sitter/tree-sitter-html")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (json       "https://github.com/tree-sitter/tree-sitter-json")
+        (python     "https://github.com/tree-sitter/tree-sitter-python")
+        (rust       "https://github.com/tree-sitter/tree-sitter-rust")
+        (toml       "https://github.com/tree-sitter/tree-sitter-toml")
+        (yaml       "https://github.com/ikatyang/tree-sitter-yaml")))
 
 ;; Remap major modes to tree-sitter versions
 (setq major-mode-remap-alist
-      '((bash-mode . bash-ts-mode)
-        (python-mode . python-ts-mode)
-        (c-mode . c-ts-mode)
-        (json-mode . json-ts-mode)
-        (javascript-mode . js-ts-mode)))
+      '((bash-mode       . bash-ts-mode)
+        (sh-mode         . bash-ts-mode)
+        (c-mode          . c-ts-mode)
+        (c++-mode        . cpp-ts-mode)
+        (css-mode        . css-ts-mode)
+        (html-mode       . html-ts-mode)
+        (js-mode         . js-ts-mode)
+        (js2-mode        . js-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (json-mode       . json-ts-mode)
+        (python-mode     . python-ts-mode)
+        (rust-mode       . rust-ts-mode)
+        (toml-mode       . toml-ts-mode)
+        (yaml-mode       . yaml-ts-mode)))
 
 ;; Dired
 ;; TODO change ls output

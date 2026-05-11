@@ -46,19 +46,26 @@ set cleaner ctpvclear
 # cmd on-quit $stpvimg --end $id
 
 # cmd/funcions
-
-cmd open &{{
-    for file in $fx; do
-        case $(file --mime-type -Lb "$file") in
-            text/*)
-                lf -remote "send $id \$EDITOR \"$file\""
-                ;;
-            *)
-                ${OPENER:-xdg-open} "$file" >/dev/null 2>&1 &
-                ;;
-        esac
-    done
+cmd open ${{
+    case $(file --mime-type -Lb "$f") in
+        text/*)
+            if command -v "${EDITOR:-}" >/dev/null 2>&1; then
+                "$EDITOR" "$f"
+            elif command -v nvim >/dev/null 2>&1; then
+                nvim "$f"
+            else
+                vis "$f"
+            fi
+            ;;
+        *)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+    esac
 }}
+
+# alternative maybe faster?
+# casee "$f" in
+#         *.txt|*.md|*.c|*.h|*.sh|*.py|*.json|*.yaml|*.yml)
 
 cmd mkdir ${{
     printf "Directory name(s): "

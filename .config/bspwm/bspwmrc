@@ -1,9 +1,17 @@
 #!/usr/bin/env sh
 
 # Loggings
-set -x
+# echo
+# echo "===== $(date) ====="
+# echo "bspwmrc pid=$$ ppid=$PPID"
+
 exec >>"$HOME/.local/state/bspwm.log" 2>&1
-echo "===== $(date) ====="
+printf '\n===== %s pid=%s ppid=%s =====\n' \
+    "$(date '+%Y-%m-%d %H:%M:%S.%N %z')" \
+    "$$" "$PPID"
+ps -fp "$PPID"
+pstree -sap "$$" 2>/dev/null || true
+set -x
 
 [ -f "$HOME/.config/bspwm/autostart" ] && . "$HOME/.config/bspwm/autostart" &
 
@@ -12,7 +20,7 @@ echo "===== $(date) ====="
 xrandr --output eDP1 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output DP1 --off --output DP2 --off --output DP3 --off --output DP4 --off --output HDMI1 --mode 1920x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off
 
 for monitor in $(bspc query -M --names); do
-    bspc monitor $monitor -d 1 2 3 4 5 6 7 8 9 10
+    bspc monitor "$monitor" -d 1 2 3 4 5 6 7 8 9 10
 done
 
 bspc config border_width         2
@@ -30,7 +38,7 @@ bspc rule -a mediainfo-gui state=floating
 bspc rule -a galculator state=floating
 bspc rule -a Emacs state=tiled
 
-$HOME/.config/polybar/init.sh &
+[ -x "$HOME/.config/polybar/init.sh" ] && "$HOME/.config/polybar/init.sh" &
 # to change bar size need to be change in 2 files
 # ~/.config/polybar/config.ini in [bar/bar1] and [bar/bar2]
 # ~/.config/bspwm/polybar_toggle.sh

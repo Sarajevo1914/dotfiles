@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+run() {
+    command -v "$1" >/dev/null 2>&1 || return 0
+    pgrep -x "$1" >/dev/null 2>&1 || "$@" &
+}
+
+run_no_check() {
+    command -v "$1" >/dev/null 2>&1 || return 0
+    "$@" &
+}
+
+run sxhkd -c "$HOME/.config/bspwm/sxhkdrc"

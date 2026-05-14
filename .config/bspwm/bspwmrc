@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
 
-pgrep -x sxhkd > /dev/null 2>&1 || sxhkd -c ~/.config/bspwm/sxhkdrc &
-pgrep -x nitrogen > /dev/null 2>&1 || nitrogen --restore &
-pgrep -x emacs > /dev/null 2>&1 || emacs --daemon &
-pgrep -x udiskie > /dev/null 2>&1 || udiskie &
-pgrep -x lxqt-policykit-agent > /dev/null 2>&1 || lxqt-policykit-agent &
-pgrep -x picom > /dev/null 2>&1 || picom --config ~/.config/picom/picom.conf &
+# Loggings
+set -x
+exec >>"$HOME/.local/state/bspwm.log" 2>&1
+echo "===== $(date) ====="
+
+[ -f "$HOME/.config/bspwm/autostart" ] && . "$HOME/.config/bspwm/autostart" &
+
+[ -f "$HOME/.config/x11/autostart" ] && . "$HOME/.config/x11/autostart" &
 
 xrandr --output eDP1 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output DP1 --off --output DP2 --off --output DP3 --off --output DP4 --off --output HDMI1 --mode 1920x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off
-
-wmname LG3D
 
 for monitor in $(bspc query -M --names); do
     bspc monitor $monitor -d 1 2 3 4 5 6 7 8 9 10
@@ -30,7 +30,7 @@ bspc rule -a mediainfo-gui state=floating
 bspc rule -a galculator state=floating
 bspc rule -a Emacs state=tiled
 
-$HOME/.config/polybar/init.sh
+$HOME/.config/polybar/init.sh &
 # to change bar size need to be change in 2 files
 # ~/.config/polybar/config.ini in [bar/bar1] and [bar/bar2]
 # ~/.config/bspwm/polybar_toggle.sh

@@ -19,7 +19,7 @@ I think this way of organization is a little more modular and easy to maintain a
 
 ## Common base for x11 and wayland
 ```
-zsh pcmanfm neovim emacs kitty firefox mpv nsxiv-git lf eza zoxide
+zsh pcmanfm neovim emacs kitty firefox mpv nsxiv-git lf eza zoxide wmname
 ```
 
 ## X11
@@ -65,7 +65,7 @@ From archinstall ISO media, change root using user account:
 chroot-arch /mnt su -- user
 ```
 
-Or from a booted OS after install:
+Or from a booted OS after install on home (~/):
 ```sh
 rm -rf * .*
 sudo pacman -Syu git rsync base-devel --needed
